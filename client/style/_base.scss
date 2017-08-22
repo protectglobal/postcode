@@ -1,0 +1,27 @@
+/**
+* @see {@link http://julian.io/how-to-use-postcss-in-meteor/}
+* @see {@link https://medium.com/@juliancwirko/how-to-use-css-linter-in-meteor-c60b2f24f969#.bvya24363}
+* @see {@link http://julian.io/some-things-you-may-think-about-postcss-and-you-might-be-wrong/}
+*/
+
+#react-root { height: 100%; }
+.full-width { width: 100%; }
+.full-height { height: 100%; }
+.black { color: black; }
+.green { color: green; }
+.red { color: tomato; }
+.light-grey { color: $grey-bg; }
+.grey { color: $grey-border; }
+.grey-border { border: 1px solid #C0BFBF; }
+.dark-grey { color: #C0BFBF; }
+.salmon-bg { background-color: $salmon-color; }
+.line-through { text-decoration: line-through; }
+.pointer { cursor: pointer };
+
+.ant-input-group-wrapper { width: 100% };
+// TODO: add .pth (padding top header) .hh (header-height)
+.ant-select-dropdown-menu-item-active {
+  &.ant-select-dropdown-menu-item {
+    background-color: #0e77ca;
+  }
+}

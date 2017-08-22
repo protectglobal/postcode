@@ -1,0 +1,26 @@
+{
+  "smtp": {
+    "protocol": "smtp",
+    "username": "postmaster%40sandboxd34250b1e6ec499ab580ba35a877b91b.mailgun.org",
+    "password": "95bb4db93d50977af868ff61b44c0529",
+    "server": "smtp.mailgun.org",
+    "port": "587"
+  },
+  "sikka": {
+    "rateLimits": {
+      "perIp": "120"
+    },
+    "times": {
+      "blockIpFor": "120000"
+    },
+    "captcha": {
+      "siteKey": ""
+    },
+    "captcha": {
+      "secret": ""
+    },
+    "times": {
+      "humanLivesUpto": "3600000"
+    }
+  }
+}

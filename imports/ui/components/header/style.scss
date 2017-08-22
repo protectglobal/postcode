@@ -1,0 +1,49 @@
+// see ui/layouts/_default-layout.scss
+
+.Header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: $header-height;
+  z-index: 2;
+  width: 100%;
+  background-color: white;
+  border-bottom: 1px solid $grey-border;
+
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.link {
+  // Mobile first
+  display: block;
+  padding: 20px;
+  border-bottom: 1px solid $grey-border;
+
+  // Desktop view
+  @media screen and (min-width: 1024px) {
+    display: inline;
+    border: none;
+    padding: 10px;
+  }
+}
+
+.activeBgColor {
+  background-color: $salmon-color;
+}
+
+.username {
+  color: $blue-color;
+  cursor: pointer;
+}
+
+.menu {
+  // display: none;
+  background-color: white;
+  z-index: 2;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: $header-height;
+}
