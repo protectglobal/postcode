@@ -47,7 +47,11 @@ class AddInstallerModal extends Component {
     const { reduxState, reduxActions } = this.props;
     const { errors } = reduxState;
 
-    reduxActions.dispatchUpdateTextField(fieldName, value);
+    if (fieldName !== 'postalAreas') {
+      reduxActions.dispatchUpdateTextField(fieldName, value);
+    } else {
+      reduxActions.dispatchSetArrayField(fieldName, value);
+    }
 
     // Clear errors if any
     if (errors[fieldName].length > 0) {
@@ -95,7 +99,8 @@ class AddInstallerModal extends Component {
 
     Meteor.call('Installers.methods.addInstaller', newInstaller, (err) => {
       if (err) {
-        Bert.alert('The form has errors', 'danger', 'growl-top-right');
+        Bert.alert(err.reason, 'danger', 'growl-top-right');
+        console.log(err.reason);
         /* errors = Installers.apiBoth.handleCreateInstallerErrors(err);
         if (AuxFunctions.hasErrors(errors)) {
           // Display errors on UI
@@ -193,6 +198,12 @@ function mapDispatchToProps(dispatch) {
     },
     dispatchSetBooleanField(fieldName, value) {
       return dispatch(Actions.setBooleanField(namespace, fieldName, value));
+    },
+    dispatchSetArrayField(fieldName, value) {
+      return dispatch(Actions.setArrayField(namespace, fieldName, value));
+    },
+    dispatchClearArrayField(fieldName) {
+      return dispatch(Actions.clearArrayField(namespace, fieldName));
     },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));

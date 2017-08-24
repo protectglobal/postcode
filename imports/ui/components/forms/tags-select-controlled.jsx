@@ -15,19 +15,9 @@ class TagsSelectControlled extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
-    // this.state = { value: props.value || '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleSearch = this.handleSearch.bind(this);
   }
-
-  /* componentWillReceiveProps(nextProps) {
-    // Should be a controlled component.
-    if ('value' in nextProps) {
-      const value = nextProps.value;
-      this.setState({ value });
-    }
-    return true;
-  } */
 
   handleChange(value) {
     // Get context
@@ -44,9 +34,9 @@ class TagsSelectControlled extends Component {
   }
 
   render() {
-    const { id, value, options, onChange, onSearch, ...other } = this.props;
+    const { id, options, onChange, onSearch, ...other } = this.props;
 
-    const items = options && options.map((option) => (
+    const items = options && options.map(option => (
       <Option key={option} value={option}>{option}</Option>
     ));
 

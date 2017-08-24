@@ -17,7 +17,7 @@ const InstallersApiServer = {};
 * @return {string} - installerId.
 */
 InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
-  console.log('Installers.apiServer.insertInstaller input:', curUserId, newInstaller);
+  // console.log('Installers.apiServer.insertInstaller input:', curUserId, newInstaller);
   check(curUserId, String);
   check(newInstaller, {
     logo: String,
@@ -32,7 +32,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   });
 
   // Check for errors
-  const errors = InstallersApiBoth.checkNewCustomerFields(newInstaller);
+  const errors = InstallersApiBoth.checkNewInstallerFields(newInstaller);
   if (AuxFunctions.hasErrors(errors)) {
     return {
       err: {

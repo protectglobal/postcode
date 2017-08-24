@@ -1,9 +1,8 @@
-import _ from 'underscore';
-import Constants from '../../../constants.js';
 import {
   textFieldReducer,
   numericFieldReducer,
   booleanFieldReducer,
+  arrayFieldReducer,
   errorsReducer,
 } from './shared-reducers.js';
 
@@ -61,7 +60,6 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
       case 'city':
       case 'phoneNumber':
       case 'email':
-      case 'postalAreas':
         return {
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
@@ -79,6 +77,11 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
         return {
           ...state,
           [fieldName]: numericFieldReducer(state[fieldName], action),
+        };
+      case 'postalAreas':
+        return {
+          ...state,
+          [fieldName]: arrayFieldReducer(state[fieldName], action),
         };
       case 'errors':
         return {

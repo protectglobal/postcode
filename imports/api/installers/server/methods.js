@@ -10,6 +10,7 @@ import InstallersApiServer from './api.js';
 * @summary Insert new installer into Installers collection.
 */
 Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
+  // console.log('Installers.methods.addInstaller', newInstaller);
   check(newInstaller, {
     logo: String,
     companyName: String,
@@ -35,9 +36,9 @@ Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
     throw new Error(403, 'User account is not verified at Installers.methods.addInstaller');
   }
 
-  // If role is already set, return.
-  if (Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
-    return;
+  // Check user role
+  if (!Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
+    throw new Error(403, 'Wrong user role at Installers.methods.addInstaller');
   }
 
   const { err } = InstallersApiServer.insertInstaller(curUserId, newInstaller);

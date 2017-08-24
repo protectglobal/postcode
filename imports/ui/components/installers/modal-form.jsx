@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Form from 'antd/lib/form'; // for js
 import 'antd/lib/form/style/css'; // for css
 import InputControlled from '../../components/forms/input-controlled';
+import TagsSelectControlled from '../../components/forms/tags-select-controlled';
 import AuxFunctions from '../../../api/aux-functions';
 
 const FormItem = Form.Item;
@@ -34,6 +35,7 @@ const ModalForm = (props) => {
       className="mt2"
     >
       <FormItem
+        label="Logo"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'logo') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'logo')}
       >
@@ -46,6 +48,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Company name"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'companyName') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'companyName')}
       >
@@ -58,6 +61,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Address 1"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'addressOne') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'addressOne')}
       >
@@ -70,6 +74,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Address 2"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'addressTwo') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'addressTwo')}
       >
@@ -82,6 +87,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Postal code"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'postalCode') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'postalCode')}
       >
@@ -94,6 +100,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="City"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'city') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'city')}
       >
@@ -106,6 +113,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Phone number"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'phoneNumber') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'phoneNumber')}
       >
@@ -118,6 +126,7 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Email"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'email') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'email')}
       >
@@ -130,15 +139,18 @@ const ModalForm = (props) => {
         />
       </FormItem>
       <FormItem
+        label="Postal areas"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'postalAreas') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'postalAreas')}
       >
-        <InputControlled
-          type="text"
+        <TagsSelectControlled
           id="postalAreas"
           placeholder="Postal areas"
-          value={postalAreas}
+          className="mb2"
+          options={[]}
+          defaultValue={postalAreas}
           onChange={handleInputChange}
+          onSearch={() => {}}
         />
       </FormItem>
     </Form>
