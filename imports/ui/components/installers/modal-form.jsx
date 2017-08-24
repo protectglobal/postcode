@@ -157,6 +157,7 @@ const ModalForm = (props) => {
           defaultValue={postalAreas}
           onChange={handleInputChange}
           onSearch={() => {}}
+          dropdownStyle={{ display: 'none' }}
         />
       </FormItem>
     </Form>
