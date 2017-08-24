@@ -15,6 +15,7 @@ import {
 // Page reducer. Holds state for the whole page component. Delegates to smaller
 // reducers as needed.
 const initInstallersPageState = {
+  _id: '',
   logo: '',
   companyName: '',
   addressOne: '',
@@ -23,9 +24,10 @@ const initInstallersPageState = {
   city: '',
   phoneNumber: '',
   email: '',
-  postalAreas: '',
-  newInstallerModalVisible: false,
+  postalAreas: [],
+  addInstallerModalVisible: false,
   editInstallerModalVisible: false,
+  canAdd: true,
   canEdit: true,
   canDelete: true,
   pageNumber: 1,
@@ -50,6 +52,7 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
 
     const { fieldName } = action;
     switch (fieldName) {
+      case '_id':
       case 'logo':
       case 'companyName':
       case 'addressOne':
@@ -63,8 +66,9 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
         };
-      case 'newInstallerModalVisible':
+      case 'addInstallerModalVisible':
       case 'editInstallerModalVisible':
+      case 'canAdd':
       case 'canEdit':
       case 'canDelete':
         return {

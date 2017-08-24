@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   forgotPassword: forgotPasswordPageReducer,
   resetPassword: resetPasswordPageReducer,
   home: homePageReducer,
-  viewLooks: installersPageReducer,
+  installers: installersPageReducer,
 });
 
 export default rootReducer;

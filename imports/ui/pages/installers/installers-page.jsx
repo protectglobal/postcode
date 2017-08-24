@@ -11,8 +11,9 @@ import { Roles } from 'meteor/alanning:roles';
 import Constants from '../../../api/constants.js';
 // import AuxFunctions from '../../../api/aux-functions.js';
 import Users from '../../../api/users/namespace.js';
+import Installers from '../../../api/installers/namespace.js';
 import InstallersView from './installers-view.jsx';
-// import LoadingPage from '../loading-page.jsx';
+import LoadingPage from '../loading-page.jsx';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -28,11 +29,13 @@ class InstallersPage extends Component {
   }
 
   render() {
+    const { meteorData } = this.props;
+
     return (
       <InstallersView
         // pass data down
         // reduxState={reduxState}
-        // meteorData={meteorData}
+        meteorData={meteorData}
         // pass methods down
         // handleRoleChange={this.handleRoleChange}
         // handleDeactivate={this.handleDeactivate}
@@ -42,19 +45,19 @@ class InstallersPage extends Component {
 }
 
 InstallersPage.propTypes = {
-  /* meteorData: PropTypes.shape({
+  meteorData: PropTypes.shape({
     curUserId: PropTypes.string,
-    usersReady: PropTypes.bool.isRequired,
-    users: PropTypes.array.isRequired,
-  }).isRequired, */
+    installersReady: PropTypes.bool.isRequired,
+    installers: PropTypes.array.isRequired,
+  }).isRequired,
 };
 
 InstallersPage.defaultProps = {
-  /* meteorData: {
+  meteorData: {
     curUserId: '',
-    usersReady: false,
-    users: [],
-  }, */
+    installersReady: false,
+    installers: [],
+  },
 };
 //------------------------------------------------------------------------------
 // PAGE CONTAINER DEFINITION:
@@ -65,10 +68,11 @@ InstallersPage.defaultProps = {
 * 'Page' component.
 */
 const InstallersPageContainer = createContainer(() => {
-  // Make sure the user is logged in!
-  // const curUserId = Meteor.userId();
+  // Get current user
+  const curUserId = Meteor.userId();
 
-  /* if (!curUserId) {
+  // Make sure the user is logged in!
+  if (!curUserId) {
     FlowRouter.go('login');
     return {};
   }
@@ -81,34 +85,51 @@ const InstallersPageContainer = createContainer(() => {
   }
 
   // Check user role
-  if (!Roles.userIsInRole(curUserId, Constants.USERS_PAGE_ROLES)) {
+  if (!Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
     FlowRouter.go('login');
     return {};
   }
 
-  // Subscribe to all users data
-  const subs = Meteor.subscribe('Users.publications.getAllUsers');
+  // Subscribe to all installers data
+  const subs = Meteor.subscribe('Installers.publications.getAllInstallers');
 
-  // Format data to be displayed in table.
-  const users = Users.collection.find({}, { sort: { createdAt: -1 } }).map((user) => {
-    const { _id, profile, emails, roles } = user;
+  // Format data to be displayed in table, plus add fallback.
+  const installers = Installers.collection.find({}, { sort: { createdAt: -1 } }).map((installer) => {
+    const {
+      _id,
+      logo,
+      companyName,
+      addressOne,
+      addressTwo,
+      postalCode,
+      city,
+      phoneNumber,
+      email,
+      postalAreas,
+    } = installer;
+
     return {
       _id,
-      key: _id,
-      name: profile && profile.name || '',
-      email: emails && emails[0] && emails[0].address || '',
-      role: roles && roles[0] || '',
+      key: _id, // required by antd table
+      logo: logo || '',
+      companyName: companyName || '',
+      addressOne: addressOne || '',
+      addressTwo: addressTwo || '',
+      postalCode: postalCode || '',
+      city: city || '',
+      phoneNumber: phoneNumber || '',
+      email: email || '',
+      postalAreas: postalAreas || [],
     };
   });
 
   return {
     meteorData: {
       curUserId,
-      usersReady: subs.ready(),
-      users,
+      installersReady: subs.ready(),
+      installers,
     },
-  }; */
-  return {};
+  };
 }, InstallersPage);
 
 export default InstallersPageContainer;

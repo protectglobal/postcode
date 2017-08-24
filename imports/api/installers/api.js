@@ -96,5 +96,34 @@ InstallersApiBoth.checkNewInstallerFields = (newInstaller) => {
   return errors;
 };
 //------------------------------------------------------------------------------
+/**
+* @summary Handle errors from Installers.methods.addInstaller callback.
+*/
+/* InstallersApiBoth.api.handleAddEditBloggerErrors = (err) => {
+  // check(err, Object);
+
+  // Destructure
+  const { error, reason } = err;
+
+  // Initialize errors
+  const errors = {
+    siteUrl: [],
+  };
+
+  // Handle known errors firts
+  if (error === 403) {
+    if (reason === 'Duplicated site URL') {
+      // XXX i18n
+      errors.siteUrl.push('A blogger with the same site URL already exists');
+    }
+  // Handle unexpected error
+  } else {
+    // XXX i18n
+    errors.siteUrl.push('Unexpected error');
+  }
+
+  return errors;
+}; */
+//------------------------------------------------------------------------------
 
 export default InstallersApiBoth;
