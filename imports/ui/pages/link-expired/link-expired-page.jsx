@@ -50,10 +50,10 @@ class LinkExpiredPage extends Component {
 
     return (
       <LinkExpiredView
-        // pass data down
+        // Pass data down
         reduxState={reduxState}
         meteorData={meteorData}
-        // pass methods down
+        // Pass methods down
         handleResendConfirmationLinkClick={this.handleResendConfirmationLinkClick}
       />
     );

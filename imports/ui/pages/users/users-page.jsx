@@ -65,9 +65,9 @@ class UsersPage extends Component {
 
     return (
       <UsersView
-        // pass data down
+        // Pass data down
         meteorData={meteorData}
-        // pass methods down
+        // Pass methods down
         handleRoleChange={this.handleRoleChange}
         handleDeactivate={this.handleDeactivate}
       />

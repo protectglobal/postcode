@@ -6,7 +6,7 @@ import { createContainer } from 'meteor/react-meteor-data';
 // import { Bert } from 'meteor/themeteorchef:bert';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Roles } from 'meteor/alanning:roles';
-// import _ from 'underscore';
+import _ from 'underscore';
 import Actions from '../../../api/redux/client/actions.js';
 import Constants from '../../../api/constants.js';
 // import AuxFunctions from '../../../api/aux-functions.js';
@@ -26,33 +26,64 @@ class InstallersPage extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
+    this.handleEditInstallerButtonClick = this.handleEditInstallerButtonClick.bind(this);
+  }
+
+  handleEditInstallerButtonClick({ _id: installerId }) {
+    // This method is fired when the edit button is clicked. It receives as an
+    // argument the record that the user is trying to modify.
+    const { reduxActions, meteorData } = this.props;
+    const { installers } = meteorData;
+
+    // Find the installer associated to the given installerId
+    const installer = _.find(installers, ({ _id }) => (_id === installerId));
+
+    // Fill the redux store using provided by the record and, therefore, prefil
+    // the form rendered inside the edit installer modal
+    const keys = _.keys(installer);
+    _.each(keys, (key) => {
+      if (key !== 'postalAreas') {
+        reduxActions.dispatchUpdateTextField(key, installer[key]);
+      } else {
+        reduxActions.dispatchSetArrayField(key, installer[key]);
+      }
+    });
+
+    // Open modal
+    reduxActions.dispatchSetBooleanField('editInstallerModalVisible', true);
   }
 
   render() {
     const { reduxState, meteorData } = this.props;
+    const { installersReady } = meteorData;
+
+    // Display loading indicator in case subscription isn't ready
+    if (!installersReady) {
+      return <LoadingPage />;
+    }
 
     return (
       <InstallersView
-        // pass data down
+        // Pass data down
         reduxState={reduxState}
         meteorData={meteorData}
-        // pass methods down
-        // handleRoleChange={this.handleRoleChange}
-        // handleDeactivate={this.handleDeactivate}
+        // Pass methods down
+        handleEditInstallerButtonClick={this.handleEditInstallerButtonClick}
       />
     );
   }
 }
 
 InstallersPage.propTypes = {
+  reduxState: PropTypes.shape({
+    addInstallerModalVisible: PropTypes.bool.isRequired,
+    editInstallerModalVisible: PropTypes.bool.isRequired,
+  }).isRequired,
+  reduxActions: PropTypes.object.isRequired,
   meteorData: PropTypes.shape({
     curUserId: PropTypes.string,
     installersReady: PropTypes.bool.isRequired,
     installers: PropTypes.array.isRequired,
-  }).isRequired,
-  reduxState: PropTypes.shape({
-    addInstallerModalVisible: PropTypes.bool.isRequired,
-    editInstallerModalVisible: PropTypes.bool.isRequired,
   }).isRequired,
 };
 

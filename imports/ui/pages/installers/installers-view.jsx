@@ -21,8 +21,8 @@ const InstallersView = (props) => {
     // state,
     // reduxState,
     meteorData,
-    /* handleEditInstallerButtonClick,
-    handleFilterDropdownVisibleChange,
+    handleEditInstallerButtonClick,
+    /* handleFilterDropdownVisibleChange,
     handleSearchTextChange,
     handleFilter, */
   } = props;
@@ -95,6 +95,23 @@ const InstallersView = (props) => {
       dataIndex: 'postalAreas',
       key: 'postalAreas',
     },
+    {
+      title: 'Edit',
+      key: 'edit',
+      render: (text, record) => (
+        <a
+          href="#"
+          onClick={(e) => {
+            // When the edit button is clicked the modal is open and the form
+            // is pre-filled using the record data
+            e.preventDefault();
+            handleEditInstallerButtonClick(record);
+          }}
+        >
+          Edit
+        </a>
+      ),
+    },
   ];
 
   return (
@@ -130,8 +147,8 @@ InstallersView.propTypes = {
     nameSearchText: PropTypes.string.isRequired,
     aboutSearchText: PropTypes.string.isRequired,
   }).isRequired, */
-  /* handleEditInstallerButtonClick: PropTypes.func.isRequired,
-  handleFilterDropdownVisibleChange: PropTypes.func.isRequired,
+  handleEditInstallerButtonClick: PropTypes.func.isRequired,
+  /* handleFilterDropdownVisibleChange: PropTypes.func.isRequired,
   handleSearchTextChange: PropTypes.func.isRequired,
   handleFilter: PropTypes.func.isRequired, */
 };

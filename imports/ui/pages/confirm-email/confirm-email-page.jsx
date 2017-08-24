@@ -50,9 +50,9 @@ class ConfirmEmailPage extends Component {
 
     return (
       <ConfirmEmailView
-        // pass data down
+        // Pass data down
         reduxState={reduxState}
-        // pass methods down
+        // Pass methods down
         handleResendConfirmationLinkClick={this.handleResendConfirmationLinkClick}
       />
     );

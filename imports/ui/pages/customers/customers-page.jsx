@@ -40,10 +40,10 @@ class CustomersPage extends Component {
 
     return (
       <CustomersView
-        // pass data down
+        // Pass data down
         // reduxState={reduxState}
         meteorData={meteorData}
-        // pass methods down
+        // Pass methods down
         // handleRoleChange={this.handleRoleChange}
         // handleDeactivate={this.handleDeactivate}
       />

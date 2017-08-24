@@ -117,9 +117,9 @@ class SignupPage extends Component {
 
     return (
       <SignupView
-        // pass data down
+        // Pass data down
         reduxState={reduxState}
-        // pass methods down
+        // Pass methods down
         handleInputChange={this.handleInputChange}
         handleSubmit={this.handleSubmit}
       />
