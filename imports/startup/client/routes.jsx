@@ -14,7 +14,7 @@ import ForgotPasswordPageContainer from '../../ui/pages/forgot-password/forgot-p
 import ResetPasswordPageContainer from '../../ui/pages/reset-password/reset-password-page.jsx';
 import HomePageContainer from '../../ui/pages/home/home-page.jsx';
 import UsersPageContainer from '../../ui/pages/users/users-page.jsx';
-import ProvidersPageContainer from '../../ui/pages/providers/providers-page.jsx';
+import InstallersPageContainer from '../../ui/pages/installers/installers-page.jsx';
 import CustomersPageContainer from '../../ui/pages/customers/customers-page.jsx';
 import NotFoundPage from '../../ui/pages/not-found-page.jsx';
 
@@ -43,8 +43,8 @@ function clearHomePageReduxState() {
   dispatch(Actions.setInitialState('home'));
 }
 //------------------------------------------------------------------------------
-/* function clearProvidersPageReduxState() {
-  dispatch(Actions.setInitialState('providers'));
+/* function clearInstallersPageReduxState() {
+  dispatch(Actions.setInitialState('installers'));
 } */
 //------------------------------------------------------------------------------
 // ROUTES:
@@ -160,16 +160,16 @@ FlowRouter.route('/users', {
   // triggersExit: [clearUsersPageReduxState],
 });
 
-FlowRouter.route('/providers', {
-  name: 'providers',
+FlowRouter.route('/installers', {
+  name: 'installers',
   action() {
     mount(Root, {
-      content: () => <ProvidersPageContainer />,
+      content: () => <InstallersPageContainer />,
     });
   },
   // calls when we decide to move to another route
   // but calls before the next route started
-  // triggersExit: [clearProvidersPageReduxState],
+  // triggersExit: [clearInstallersPageReduxState],
 });
 
 FlowRouter.route('/customers', {

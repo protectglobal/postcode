@@ -1,9 +1,8 @@
-import _ from 'underscore';
-import Constants from '../../../constants.js';
 import {
   textFieldReducer,
   numericFieldReducer,
   booleanFieldReducer,
+  arrayFieldReducer,
   errorsReducer,
 } from './shared-reducers.js';
 
@@ -14,54 +13,60 @@ import {
 
 // Page reducer. Holds state for the whole page component. Delegates to smaller
 // reducers as needed.
-const initViewLooksPageState = {
-  searchText: '',
-  searchPageUrl: '',
-  searchBlogger: '',
-  tagSearch: '',
-  editLookModalVisible: false,
+const initInstallersPageState = {
+  _id: '',
+  logo: '',
+  companyName: '',
+  addressOne: '',
+  addressTwo: '',
+  postalCode: '',
+  city: '',
+  phoneNumber: '',
+  email: '',
+  postalAreas: [],
+  addInstallerModalVisible: false,
+  editInstallerModalVisible: false,
+  canAdd: true,
   canEdit: true,
   canDelete: true,
   pageNumber: 1,
   errors: {
-    searchText: [],
-    searchPageUrl: [],
-    searchBlogger: [],
-    tagSearch: [],
+    logo: [],
+    companyName: [],
+    addressOne: [],
+    addressTwo: [],
+    postalCode: [],
+    city: [],
+    phoneNumber: [],
+    email: [],
+    postalAreas: [],
   },
 };
-const viewLooksPageReducer = (state = initViewLooksPageState, action) => {
-  if (action.namespace === 'viewLooks') {
+
+const installersPageReducer = (state = Object.assign({}, initInstallersPageState), action) => {
+  if (action.namespace === 'installers') {
     if (action.type === 'SET_INITIAL_STATE') {
-      return {
-        searchText: '',
-        searchPageUrl: '',
-        searchBlogger: '',
-        tagSearch: '',
-        editLookModalVisible: false,
-        canEdit: true,
-        canDelete: true,
-        pageNumber: 1,
-        errors: {
-          searchText: [],
-          searchPageUrl: [],
-          searchBlogger: [],
-          tagSearch: [],
-        },
-      };
+      return Object.assign({}, initInstallersPageState);
     }
 
     const { fieldName } = action;
     switch (fieldName) {
-      case 'searchText':
-      case 'searchPageUrl':
-      case 'searchBlogger':
-      case 'tagSearch':
+      case '_id':
+      case 'logo':
+      case 'companyName':
+      case 'addressOne':
+      case 'addressTwo':
+      case 'postalCode':
+      case 'city':
+      case 'phoneNumber':
+      case 'email':
         return {
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
         };
-      case 'editLookModalVisible':
+      case 'addInstallerModalVisible':
+      case 'editInstallerModalVisible':
+      case 'canAdd':
       case 'canEdit':
       case 'canDelete':
         return {
@@ -72,6 +77,11 @@ const viewLooksPageReducer = (state = initViewLooksPageState, action) => {
         return {
           ...state,
           [fieldName]: numericFieldReducer(state[fieldName], action),
+        };
+      case 'postalAreas':
+        return {
+          ...state,
+          [fieldName]: arrayFieldReducer(state[fieldName], action),
         };
       case 'errors':
         return {
@@ -85,4 +95,4 @@ const viewLooksPageReducer = (state = initViewLooksPageState, action) => {
   return state;
 };
 
-export default viewLooksPageReducer;
+export default installersPageReducer;

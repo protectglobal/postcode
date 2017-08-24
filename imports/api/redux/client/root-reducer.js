@@ -6,7 +6,7 @@ import linkExpiredPageReducer from './reducers/link-expired-page-reducer.js';
 import forgotPasswordPageReducer from './reducers/forgot-password-page-reducer.js';
 import resetPasswordPageReducer from './reducers/reset-password-page-reducer.js';
 import homePageReducer from './reducers/home-page-reducer.js';
-import viewLooksPageReducer from './reducers/view-looks-page-reducer.js';
+import installersPageReducer from './reducers/installers-page-reducer.js';
 
 const rootReducer = combineReducers({
   signup: signupPageReducer,
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   forgotPassword: forgotPasswordPageReducer,
   resetPassword: resetPasswordPageReducer,
   home: homePageReducer,
-  viewLooks: viewLooksPageReducer,
+  installers: installersPageReducer,
 });
 
 export default rootReducer;

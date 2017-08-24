@@ -17,11 +17,9 @@ const CustomersView = (props) => {
   // Destructure
   const {
     meteorData: {
-      curUserId,
+      customersReady,
       customers,
     },
-    // handleRoleChange,
-    // handleDeactivate,
   } = props;
 
   // Table columns, see: https://ant.design/components/table/
@@ -32,12 +30,12 @@ const CustomersView = (props) => {
       key: 'name',
     },
     {
-      title: 'Postal Code',
+      title: 'Postal code',
       dataIndex: 'postalCode',
       key: 'postalCode',
     },
     {
-      title: 'Phone Number',
+      title: 'Phone number',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
     },
@@ -47,7 +45,7 @@ const CustomersView = (props) => {
       key: 'email',
     },
     {
-      title: 'Created At',
+      title: 'Created at',
       dataIndex: 'createdAt',
       key: 'createdAt',
     },
@@ -60,6 +58,7 @@ const CustomersView = (props) => {
         dataSource={customers}
         bordered
         scroll={{ x: 300 }}
+        loading={!customersReady}
       />
     </DefaultLayout>
   );
@@ -67,7 +66,6 @@ const CustomersView = (props) => {
 
 CustomersView.propTypes = {
   meteorData: PropTypes.shape({
-    curUserId: PropTypes.string,
     customersReady: PropTypes.bool.isRequired,
     customers: PropTypes.array.isRequired,
   }).isRequired,

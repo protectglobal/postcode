@@ -27,9 +27,9 @@ class HomePage extends Component {
 
     return (
       <HomeView
-        // pass data down
+        // Pass data down
         reduxState={reduxState}
-        // pass methods down
+        // Pass methods down
       />
     );
   }

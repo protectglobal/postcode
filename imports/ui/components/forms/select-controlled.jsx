@@ -15,17 +15,8 @@ class SelectControlled extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
-    // this.state = { value: props.value || '' };
     this.handleChange = this.handleChange.bind(this);
   }
-
-  /* componentWillReceiveProps(nextProps) {
-    // Should be a controlled component.
-    if ('value' in nextProps) {
-      const value = nextProps.value;
-      this.setState({ value });
-    }
-  } */
 
   handleChange(value) {
     // Get context
@@ -37,7 +28,7 @@ class SelectControlled extends Component {
   render() {
     const { id, value, options, onChange, ...other } = this.props;
 
-    const items = options && options.map((option) => (
+    const items = options && options.map(option => (
       <Option key={option} value={option}>{option}</Option>
     ));
 

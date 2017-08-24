@@ -7,7 +7,6 @@ import { Roles } from 'meteor/alanning:roles';
 import Constants from '../../../api/constants.js';
 import Users from '../../../api/users/namespace.js';
 import UsersView from './users-view.jsx';
-import LoadingPage from '../loading-page.jsx';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -56,18 +55,12 @@ class UsersPage extends Component {
 
   render() {
     const { meteorData } = this.props;
-    const { usersReady } = meteorData;
-
-    // Display loading indicator in case subscription isn't ready
-    if (!usersReady) {
-      return <LoadingPage />;
-    }
 
     return (
       <UsersView
-        // pass data down
+        // Pass data down
         meteorData={meteorData}
-        // pass methods down
+        // Pass methods down
         handleRoleChange={this.handleRoleChange}
         handleDeactivate={this.handleDeactivate}
       />
