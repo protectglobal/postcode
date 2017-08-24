@@ -17,6 +17,7 @@ const UsersView = (props) => {
   const {
     meteorData: {
       curUserId,
+      usersReady,
       users,
     },
     handleRoleChange,
@@ -87,6 +88,7 @@ const UsersView = (props) => {
         dataSource={users}
         bordered
         scroll={{ x: 300 }}
+        loading={!usersReady}
       />
     </DefaultLayout>
   );

@@ -10,13 +10,13 @@ const InstallersApiBoth = {};
 //------------------------------------------------------------------------------
 /**
 * @summary Verify fields before inserting doc into database.
-* @param {object} - newInstaller = { logo, companyName, addressOne, addressTwo,
+* @param {object} - installer = { logo, companyName, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
 * @return {object} - errors.
 */
-InstallersApiBoth.checkNewInstallerFields = (newInstaller) => {
-  console.log('Installers.apiBoth.checkNewInstallerFields input:', newInstaller);
-  check(newInstaller, {
+InstallersApiBoth.checkInstallerFields = (installer) => {
+  // console.log('Installers.apiBoth.checkInstallerFields input:', installer);
+  check(installer, {
     logo: String,
     companyName: String,
     addressOne: String,
@@ -39,7 +39,7 @@ InstallersApiBoth.checkNewInstallerFields = (newInstaller) => {
     phoneNumber,
     email,
     postalAreas,
-  } = newInstaller;
+  } = installer;
 
   // Initialize errors
   const errors = {
@@ -71,7 +71,9 @@ InstallersApiBoth.checkNewInstallerFields = (newInstaller) => {
     errors.postalCode.push('Postal Code is required');
   } // TODO: alphanumeric
 
-  // TODO: city should be one from the cityList
+  if (!city || city.trim().length === 0) {
+    errors.city.push('City is required');
+  } // TODO: city should be one from the cityList
 
   if (!phoneNumber || phoneNumber.trim().length === 0) {
     errors.phoneNumber.push('Phone Number is required');

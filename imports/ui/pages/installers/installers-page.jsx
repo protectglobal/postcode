@@ -13,7 +13,6 @@ import Constants from '../../../api/constants.js';
 import Users from '../../../api/users/namespace.js';
 import Installers from '../../../api/installers/namespace.js';
 import InstallersView from './installers-view.jsx';
-import LoadingPage from '../loading-page.jsx';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -55,12 +54,6 @@ class InstallersPage extends Component {
 
   render() {
     const { reduxState, meteorData } = this.props;
-    const { installersReady } = meteorData;
-
-    // Display loading indicator in case subscription isn't ready
-    if (!installersReady) {
-      return <LoadingPage />;
-    }
 
     return (
       <InstallersView

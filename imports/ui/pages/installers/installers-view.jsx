@@ -1,7 +1,10 @@
 import React, { PropTypes } from 'react';
 // import { EJSON } from 'meteor/ejson';
+import _ from 'underscore';
 import Table from 'antd/lib/table'; // for js
 import 'antd/lib/table/style/css'; // for css
+import Tag from 'antd/lib/tag'; // for js
+import 'antd/lib/tag/style/css'; // for css
 import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
 import Popconfirm from 'antd/lib/popconfirm'; // for js
@@ -33,6 +36,7 @@ const InstallersView = (props) => {
   } = reduxState; */
 
   const {
+    installersReady,
     installers,
     /* filter,
     filterDropdownVisible,
@@ -94,6 +98,24 @@ const InstallersView = (props) => {
       title: 'Postal areas',
       dataIndex: 'postalAreas',
       key: 'postalAreas',
+      width: '200px',
+      render: (text, record) => {
+        const areas = [];
+        _.each(record.postalAreas, (pa) => {
+          areas.push(<Tag color="pink" key={pa}>{pa}</Tag>);
+        });
+        return (
+          <div
+            style={{
+              maxWidth: '200px',
+              maxHeight: '180px',
+              overflow: 'auto',
+            }}
+          >
+            {areas}
+          </div>
+        );
+      },
     },
     {
       title: 'Edit',
@@ -124,6 +146,7 @@ const InstallersView = (props) => {
         dataSource={installers}
         bordered
         scroll={{ x: 800 }}
+        loading={!installersReady}
       />
     </DefaultLayout>
   );

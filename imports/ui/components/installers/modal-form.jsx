@@ -153,7 +153,6 @@ const ModalForm = (props) => {
         <TagsSelectControlled
           id="postalAreas"
           placeholder="Postal areas"
-          className="mb2"
           options={[]}
           defaultValue={postalAreas}
           onChange={handleInputChange}

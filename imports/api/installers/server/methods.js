@@ -47,3 +47,47 @@ Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
     throw new Error(500, err.reason);
   }
 } });
+//------------------------------------------------------------------------------
+/**
+* @summary Edit existing installer.
+*/
+Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
+  // console.log('Installers.methods.editInstaller', installerId, installer);
+  check(installerId, String);
+  check(installer, {
+    logo: String,
+    companyName: String,
+    addressOne: String,
+    addressTwo: Match.Maybe(String),
+    postalCode: String,
+    city: String,
+    phoneNumber: String,
+    email: String,
+    postalAreas: [String],
+  });
+
+  // Get current user.
+  const curUserId = this.userId;
+
+  // Verify current user is logged in.
+  if (!curUserId) {
+    throw new Error(403, 'User is not logged in at Installers.methods.editInstaller');
+  }
+
+  // Is the account verified?
+  if (!Users.apiBoth.isAccountVerified(curUserId)) {
+    throw new Error(403, 'User account is not verified at Installers.methods.editInstaller');
+  }
+
+  // Check user role
+  if (!Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
+    throw new Error(403, 'Wrong user role at Installers.methods.editInstaller');
+  }
+
+  const { err } = InstallersApiServer.editInstaller(curUserId, installerId, installer);
+  if (err) {
+    // Bubble up error to client view
+    throw new Error(500, err.reason);
+  }
+} });
+//------------------------------------------------------------------------------

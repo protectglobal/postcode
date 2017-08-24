@@ -84,7 +84,7 @@ class AddInstallerModal extends Component {
     const newInstaller = _.pick(reduxState, fields);
 
     // Check for errors
-    const errors = Installers.apiBoth.checkNewInstallerFields(newInstaller);
+    const errors = Installers.apiBoth.checkInstallerFields(newInstaller);
 
     // In case of errors, warn user and prevent the meteor method to be called
     if (AuxFunctions.hasErrors(errors)) {

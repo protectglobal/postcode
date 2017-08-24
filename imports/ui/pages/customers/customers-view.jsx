@@ -17,6 +17,7 @@ const CustomersView = (props) => {
   // Destructure
   const {
     meteorData: {
+      customersReady,
       customers,
     },
   } = props;
@@ -57,6 +58,7 @@ const CustomersView = (props) => {
         dataSource={customers}
         bordered
         scroll={{ x: 300 }}
+        loading={!customersReady}
       />
     </DefaultLayout>
   );

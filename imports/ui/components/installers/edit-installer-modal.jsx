@@ -38,7 +38,11 @@ class EditInstallerModal extends Component {
     const { reduxState, reduxActions } = this.props;
     const { errors } = reduxState;
 
-    reduxActions.dispatchUpdateTextField(fieldName, value);
+    if (fieldName !== 'postalAreas') {
+      reduxActions.dispatchUpdateTextField(fieldName, value);
+    } else {
+      reduxActions.dispatchSetArrayField(fieldName, value);
+    }
 
     // Clear errors if any
     if (errors[fieldName].length > 0) {
@@ -63,15 +67,16 @@ class EditInstallerModal extends Component {
     ];
 
     // Clear errors if any
-    reduxActions.dispatchClearErrors(_.without(fields, '_id'));
+    reduxActions.dispatchClearErrors(fields);
 
     // Disable submit button
     reduxActions.dispatchSetBooleanField('canEdit', false);
 
+    const installerId = reduxState._id;
     const installer = _.pick(reduxState, fields);
 
     // Check for errors
-    const errors = Installers.api.checkInstallerFields(installer);
+    const errors = Installers.apiBoth.checkInstallerFields(installer);
 
     // In case of errors, warn user and prevent the meteor method to be called
     if (AuxFunctions.hasErrors(errors)) {
@@ -84,7 +89,7 @@ class EditInstallerModal extends Component {
       return;
     }
 
-    Meteor.call('Installers.methods.editInstaller', installer, (err) => {
+    Meteor.call('Installers.methods.editInstaller', installerId, installer, (err) => {
       if (err) {
         Bert.alert('The form has errors', 'danger', 'growl-top-right');
         /* errors = Installers.api.handleEditInstallerErrors(err);
@@ -177,6 +182,12 @@ function mapDispatchToProps(dispatch) {
     },
     dispatchSetBooleanField(fieldName, value) {
       return dispatch(Actions.setBooleanField(namespace, fieldName, value));
+    },
+    dispatchSetArrayField(fieldName, value) {
+      return dispatch(Actions.setArrayField(namespace, fieldName, value));
+    },
+    dispatchClearArrayField(fieldName) {
+      return dispatch(Actions.clearArrayField(namespace, fieldName));
     },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));

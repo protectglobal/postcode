@@ -14,7 +14,6 @@ import Constants from '../../../api/constants.js';
 import Users from '../../../api/users/namespace.js';
 import Customers from '../../../api/customers/namespace.js';
 import CustomersView from './customers-view.jsx';
-import LoadingPage from '../loading-page.jsx';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -31,12 +30,6 @@ class CustomersPage extends Component {
 
   render() {
     const { meteorData } = this.props;
-    const { customersReady } = meteorData;
-
-    // Display loading indicator in case subscription isn't ready
-    if (!customersReady) {
-      return <LoadingPage />;
-    }
 
     return (
       <CustomersView

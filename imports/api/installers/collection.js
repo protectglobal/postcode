@@ -88,6 +88,16 @@ InstallersCollection.attachSchema(new SimpleSchema({
     type: [String],
   },
 
+  updatedAt: {
+    type: Date,
+    optional: true,
+  },
+
+  updatedBy: {
+    type: String,
+    optional: true,
+  },
+
 }));
 
 export default InstallersCollection;
