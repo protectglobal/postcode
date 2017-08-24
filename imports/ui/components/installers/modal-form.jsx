@@ -17,6 +17,8 @@ const FormItem = Form.Item;
 const ModalForm = (props) => {
   const { reduxState, handleInputChange, handleSubmit } = props;
   const {
+    addInstallerModalVisible,
+    editInstallerModalVisible,
     logo,
     companyName,
     addressOne,
@@ -28,6 +30,11 @@ const ModalForm = (props) => {
     postalAreas,
     errors,
   } = reduxState;
+
+  // Force re-render in order to clear defaultValue tags.
+  if (addInstallerModalVisible === false && editInstallerModalVisible === false) {
+    return null;
+  }
 
   return (
     <Form
@@ -159,6 +166,8 @@ const ModalForm = (props) => {
 
 ModalForm.propTypes = {
   reduxState: PropTypes.shape({
+    addInstallerModalVisible: PropTypes.bool.isRequired,
+    editInstallerModalVisible: PropTypes.bool.isRequired,
     logo: PropTypes.string.isRequired,
     companyName: PropTypes.string.isRequired,
     addressOne: PropTypes.string.isRequired,

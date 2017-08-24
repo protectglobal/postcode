@@ -59,7 +59,7 @@ class TagsSelectControlled extends Component {
 
 TagsSelectControlled.propTypes = {
   id: PropTypes.string.isRequired,
-  options: PropTypes.array.isRequired,
+  options: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
   onSearch: PropTypes.func.isRequired,
 };

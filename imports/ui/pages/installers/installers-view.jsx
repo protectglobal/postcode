@@ -19,12 +19,18 @@ import style from './style.scss';
 const InstallersView = (props) => {
   const {
     // state,
+    // reduxState,
     meteorData,
     /* handleEditInstallerButtonClick,
     handleFilterDropdownVisibleChange,
     handleSearchTextChange,
     handleFilter, */
   } = props;
+
+  /* const {
+    addInstallerModalVisible,
+    editInstallerModalVisible,
+  } = reduxState; */
 
   const {
     installers,
@@ -112,6 +118,10 @@ InstallersView.propTypes = {
     installersReady: PropTypes.bool.isRequired,
     installers: PropTypes.array.isRequired,
   }).isRequired,
+  /* reduxState: PropTypes.shape({
+    addInstallerModalVisible: PropTypes.bool.isRequired,
+    editInstallerModalVisible: PropTypes.bool.isRequired,
+  }).isRequired, */
   /* state: PropTypes.shape({
     filter: PropTypes.string.isRequired,
     filterDropdownVisible: PropTypes.bool.isRequired,

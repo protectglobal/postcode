@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { Meteor } from 'meteor/meteor';
 // import { Accounts } from 'meteor/accounts-base';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Bert } from 'meteor/themeteorchef:bert';
+// import { Bert } from 'meteor/themeteorchef:bert';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Roles } from 'meteor/alanning:roles';
 // import _ from 'underscore';
-// import Actions from '../../../api/redux/client/actions.js';
+import Actions from '../../../api/redux/client/actions.js';
 import Constants from '../../../api/constants.js';
 // import AuxFunctions from '../../../api/aux-functions.js';
 import Users from '../../../api/users/namespace.js';
@@ -29,12 +29,12 @@ class InstallersPage extends Component {
   }
 
   render() {
-    const { meteorData } = this.props;
+    const { reduxState, meteorData } = this.props;
 
     return (
       <InstallersView
         // pass data down
-        // reduxState={reduxState}
+        reduxState={reduxState}
         meteorData={meteorData}
         // pass methods down
         // handleRoleChange={this.handleRoleChange}
@@ -50,6 +50,10 @@ InstallersPage.propTypes = {
     installersReady: PropTypes.bool.isRequired,
     installers: PropTypes.array.isRequired,
   }).isRequired,
+  reduxState: PropTypes.shape({
+    addInstallerModalVisible: PropTypes.bool.isRequired,
+    editInstallerModalVisible: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 InstallersPage.defaultProps = {
@@ -59,6 +63,50 @@ InstallersPage.defaultProps = {
     installers: [],
   },
 };
+//------------------------------------------------------------------------------
+// REDUX INTEGRATION:
+//------------------------------------------------------------------------------
+/**
+* @summary Wrapper around the 'Page' component to handle Domain State Meteor
+* reactivity (component-level subscriptions etc etc), and pass data down to
+* 'Page' component.
+*/
+const namespace = 'installers';
+
+function mapStateToProps(state) {
+  return { reduxState: state[namespace] };
+}
+
+function mapDispatchToProps(dispatch) {
+  // Bind actions to current namespace.
+  const reduxActions = {
+    dispatchUpdateTextField(fieldName, value) {
+      return dispatch(Actions.updateTextField(namespace, fieldName, value));
+    },
+    dispatchSetBooleanField(fieldName, value) {
+      return dispatch(Actions.setBooleanField(namespace, fieldName, value));
+    },
+    dispatchSetArrayField(fieldName, value) {
+      return dispatch(Actions.setArrayField(namespace, fieldName, value));
+    },
+    dispatchClearArrayField(fieldName) {
+      return dispatch(Actions.clearArrayField(namespace, fieldName));
+    },
+    dispatchSetErrors(errorsObj) {
+      return dispatch(Actions.setErrors(namespace, errorsObj));
+    },
+    dispatchClearErrors(fieldName) {
+      return dispatch(Actions.clearErrors(namespace, fieldName));
+    },
+    dispatchSetInitialState() {
+      return dispatch(Actions.setInitialState(namespace));
+    },
+  };
+
+  return { reduxActions };
+}
+// Create enhancer function
+const withRedux = connect(mapStateToProps, mapDispatchToProps);
 //------------------------------------------------------------------------------
 // PAGE CONTAINER DEFINITION:
 //------------------------------------------------------------------------------
@@ -131,5 +179,6 @@ const InstallersPageContainer = createContainer(() => {
     },
   };
 }, InstallersPage);
+//------------------------------------------------------------------------------
 
-export default InstallersPageContainer;
+export default withRedux(InstallersPageContainer);
