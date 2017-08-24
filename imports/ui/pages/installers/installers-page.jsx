@@ -11,7 +11,7 @@ import { Roles } from 'meteor/alanning:roles';
 import Constants from '../../../api/constants.js';
 // import AuxFunctions from '../../../api/aux-functions.js';
 import Users from '../../../api/users/namespace.js';
-import ProvidersView from './providers-view.jsx';
+import InstallersView from './installers-view.jsx';
 // import LoadingPage from '../loading-page.jsx';
 
 //------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ import ProvidersView from './providers-view.jsx';
 * @summary Contains all the 'Page' logic and takes care of view dispatching.
 * Actions should be dispatched here and NOT in any child component!
 */
-class ProvidersPage extends Component {
+class InstallersPage extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
@@ -29,7 +29,7 @@ class ProvidersPage extends Component {
 
   render() {
     return (
-      <ProvidersView
+      <InstallersView
         // pass data down
         // reduxState={reduxState}
         // meteorData={meteorData}
@@ -41,7 +41,7 @@ class ProvidersPage extends Component {
   }
 }
 
-ProvidersPage.propTypes = {
+InstallersPage.propTypes = {
   /* meteorData: PropTypes.shape({
     curUserId: PropTypes.string,
     usersReady: PropTypes.bool.isRequired,
@@ -49,7 +49,7 @@ ProvidersPage.propTypes = {
   }).isRequired, */
 };
 
-ProvidersPage.defaultProps = {
+InstallersPage.defaultProps = {
   /* meteorData: {
     curUserId: '',
     usersReady: false,
@@ -64,7 +64,7 @@ ProvidersPage.defaultProps = {
 * reactivity (component-level subscriptions etc etc), and pass data down to
 * 'Page' component.
 */
-const ProvidersPageContainer = createContainer(() => {
+const InstallersPageContainer = createContainer(() => {
   // Make sure the user is logged in!
   // const curUserId = Meteor.userId();
 
@@ -109,6 +109,6 @@ const ProvidersPageContainer = createContainer(() => {
     },
   }; */
   return {};
-}, ProvidersPage);
+}, InstallersPage);
 
-export default ProvidersPageContainer;
+export default InstallersPageContainer;

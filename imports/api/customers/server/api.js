@@ -46,7 +46,7 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
     console.log(exc);
     return {
       err: {
-        reason: EJSON.stringify(exc, { indent: true }),
+        reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
       },
       customerId: null,
     };

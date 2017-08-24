@@ -13,7 +13,7 @@ import Constants from '../../../api/constants';
 //------------------------------------------------------------------------------
 // COMPONENT:
 //------------------------------------------------------------------------------
-const ProvidersView = (props) => {
+const InstallersView = (props) => {
   return (
     <DefaultLayout width="1200px" padding="20px 15px 0">
       <div>
@@ -23,7 +23,7 @@ const ProvidersView = (props) => {
   );
 };
 
-ProvidersView.propTypes = {
+InstallersView.propTypes = {
 };
 
-export default ProvidersView;
+export default InstallersView;

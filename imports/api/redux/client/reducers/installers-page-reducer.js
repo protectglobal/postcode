@@ -14,54 +14,57 @@ import {
 
 // Page reducer. Holds state for the whole page component. Delegates to smaller
 // reducers as needed.
-const initViewLooksPageState = {
-  searchText: '',
-  searchPageUrl: '',
-  searchBlogger: '',
-  tagSearch: '',
-  editLookModalVisible: false,
+const initInstallersPageState = {
+  logo: '',
+  companyName: '',
+  addressOne: '',
+  addressTwo: '',
+  postalCode: '',
+  city: '',
+  phoneNumber: '',
+  email: '',
+  postalAreas: '',
+  newInstallerModalVisible: false,
+  editInstallerModalVisible: false,
   canEdit: true,
   canDelete: true,
   pageNumber: 1,
   errors: {
-    searchText: [],
-    searchPageUrl: [],
-    searchBlogger: [],
-    tagSearch: [],
+    logo: [],
+    companyName: [],
+    addressOne: [],
+    addressTwo: [],
+    postalCode: [],
+    city: [],
+    phoneNumber: [],
+    email: [],
+    postalAreas: [],
   },
 };
-const viewLooksPageReducer = (state = initViewLooksPageState, action) => {
-  if (action.namespace === 'viewLooks') {
+
+const installersPageReducer = (state = Object.assign({}, initInstallersPageState), action) => {
+  if (action.namespace === 'installers') {
     if (action.type === 'SET_INITIAL_STATE') {
-      return {
-        searchText: '',
-        searchPageUrl: '',
-        searchBlogger: '',
-        tagSearch: '',
-        editLookModalVisible: false,
-        canEdit: true,
-        canDelete: true,
-        pageNumber: 1,
-        errors: {
-          searchText: [],
-          searchPageUrl: [],
-          searchBlogger: [],
-          tagSearch: [],
-        },
-      };
+      return Object.assign({}, initInstallersPageState);
     }
 
     const { fieldName } = action;
     switch (fieldName) {
-      case 'searchText':
-      case 'searchPageUrl':
-      case 'searchBlogger':
-      case 'tagSearch':
+      case 'logo':
+      case 'companyName':
+      case 'addressOne':
+      case 'addressTwo':
+      case 'postalCode':
+      case 'city':
+      case 'phoneNumber':
+      case 'email':
+      case 'postalAreas':
         return {
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
         };
-      case 'editLookModalVisible':
+      case 'newInstallerModalVisible':
+      case 'editInstallerModalVisible':
       case 'canEdit':
       case 'canDelete':
         return {
@@ -85,4 +88,4 @@ const viewLooksPageReducer = (state = initViewLooksPageState, action) => {
   return state;
 };
 
-export default viewLooksPageReducer;
+export default installersPageReducer;
