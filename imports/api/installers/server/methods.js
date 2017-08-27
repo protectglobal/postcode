@@ -91,3 +91,35 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
   }
 } });
 //------------------------------------------------------------------------------
+/**
+* @summary Delete installer from DB.
+*/
+Meteor.methods({ 'Installers.methods.removeInstaller'(installerId) {
+  // console.log('Installers.methods.removeInstaller', installerId);
+  check(installerId, String);
+
+  // Get current user.
+  const curUserId = this.userId;
+
+  // Verify current user is logged in.
+  if (!curUserId) {
+    throw new Error(403, 'User is not logged in at Installers.methods.removeInstaller');
+  }
+
+  // Is the account verified?
+  if (!Users.apiBoth.isAccountVerified(curUserId)) {
+    throw new Error(403, 'User account is not verified at Installers.methods.removeInstaller');
+  }
+
+  // Check user role
+  if (!Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
+    throw new Error(403, 'Wrong user role at Installers.methods.removeInstaller');
+  }
+
+  const { err } = InstallersApiServer.removeInstaller(curUserId, installerId);
+  if (err) {
+    // Bubble up error to client view
+    throw new Error(500, err.reason);
+  }
+} });
+//------------------------------------------------------------------------------

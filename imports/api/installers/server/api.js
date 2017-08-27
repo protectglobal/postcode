@@ -132,5 +132,31 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   };
 };
 //------------------------------------------------------------------------------
+/**
+* @summary Delete installer. This function must be called from a trusted source
+* (server) since we are not validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to delete.
+*/
+InstallersApiServer.removeInstaller = (curUserId, installerId) => {
+  // console.log('Installers.apiServer.removeInstaller input:', curUserId, installerId);
+  check(curUserId, String);
+  check(installerId, String);
+
+  // Delete document
+  try {
+    InstallersCollection.remove({ _id: installerId });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      err: {
+        reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
+      },
+    };
+  }
+
+  return { err: null };
+};
+//------------------------------------------------------------------------------
 
 export default InstallersApiServer;

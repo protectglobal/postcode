@@ -135,7 +135,7 @@ AddInstallerModal.propTypes = {
     canAdd: PropTypes.bool.isRequired,
     addInstallerModalVisible: PropTypes.bool.isRequired,
     companyName: PropTypes.string.isRequired,
-    logo: PropTypes.shape({
+    logo: PropTypes.oneOf({}, {
       publicId: PropTypes.string.isRequired,
       resourceType: PropTypes.string.isRequired,
       format: PropTypes.string.isRequired,

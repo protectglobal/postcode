@@ -21,28 +21,14 @@ import style from './style.scss';
 //------------------------------------------------------------------------------
 const InstallersView = (props) => {
   const {
-    // state,
-    // reduxState,
     meteorData,
     handleEditInstallerButtonClick,
-    /* handleFilterDropdownVisibleChange,
-    handleSearchTextChange,
-    handleFilter, */
+    handleDeleteInstallerButtonClick,
   } = props;
-
-  /* const {
-    addInstallerModalVisible,
-    editInstallerModalVisible,
-  } = reduxState; */
 
   const {
     installersReady,
     installers,
-    /* filter,
-    filterDropdownVisible,
-    siteUrlSearchText,
-    nameSearchText,
-    aboutSearchText, */
   } = meteorData;
 
   // Table columns, see: https://ant.design/components/table/
@@ -58,7 +44,7 @@ const InstallersView = (props) => {
       key: 'logo',
       render: ({ url, secureUrl }) => (
         <img
-          src={secureUrl || url}
+          src={secureUrl || url || '/camera-image.svg'}
           alt="company logo"
           className={style.logo}
         />
@@ -118,20 +104,35 @@ const InstallersView = (props) => {
       },
     },
     {
-      title: 'Edit',
-      key: 'edit',
+      title: 'Actions',
+      key: 'actions',
       render: (text, record) => (
-        <a
-          href="#"
-          onClick={(e) => {
-            // When the edit button is clicked the modal is open and the form
-            // is pre-filled using the record data
-            e.preventDefault();
-            handleEditInstallerButtonClick(record);
-          }}
-        >
-          Edit
-        </a>
+        <div>
+          <Button
+            type="primary"
+            onClick={() => {
+              // When the edit button is clicked the modal is open and the form
+              // is pre-filled using the record data
+              handleEditInstallerButtonClick(record);
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure you want to delete this installer?"
+            onConfirm={() => { handleDeleteInstallerButtonClick(record._id); }}
+            onCancel={() => {}}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              type="danger"
+              className="ml1"
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+        </div>
       ),
     },
   ];
@@ -158,22 +159,8 @@ InstallersView.propTypes = {
     installersReady: PropTypes.bool.isRequired,
     installers: PropTypes.array.isRequired,
   }).isRequired,
-  /* reduxState: PropTypes.shape({
-    addInstallerModalVisible: PropTypes.bool.isRequired,
-    editInstallerModalVisible: PropTypes.bool.isRequired,
-  }).isRequired, */
-  /* state: PropTypes.shape({
-    filter: PropTypes.string.isRequired,
-    filterDropdownVisible: PropTypes.bool.isRequired,
-    data: PropTypes.array.isRequired,
-    siteUrlSearchText: PropTypes.string.isRequired,
-    nameSearchText: PropTypes.string.isRequired,
-    aboutSearchText: PropTypes.string.isRequired,
-  }).isRequired, */
   handleEditInstallerButtonClick: PropTypes.func.isRequired,
-  /* handleFilterDropdownVisibleChange: PropTypes.func.isRequired,
-  handleSearchTextChange: PropTypes.func.isRequired,
-  handleFilter: PropTypes.func.isRequired, */
+  handleDeleteInstallerButtonClick: PropTypes.func.isRequired,
 };
 
 export default InstallersView;
