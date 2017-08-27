@@ -16,6 +16,7 @@ import {
 const initInstallersPageState = {
   _id: '',
   logo: '',
+  imageId: '', // image id associated to uploaded logo
   companyName: '',
   addressOne: '',
   addressTwo: '',
@@ -28,6 +29,8 @@ const initInstallersPageState = {
   editInstallerModalVisible: false,
   canAdd: true,
   canEdit: true,
+  canUpload: true,
+  uploadingImage: false,
   canDelete: true,
   pageNumber: 1,
   errors: {
@@ -53,6 +56,7 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
     switch (fieldName) {
       case '_id':
       case 'logo':
+      case 'imageId':
       case 'companyName':
       case 'addressOne':
       case 'addressTwo':
@@ -68,6 +72,8 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
       case 'editInstallerModalVisible':
       case 'canAdd':
       case 'canEdit':
+      case 'canUpload':
+      case 'uploadingImage':
       case 'canDelete':
         return {
           ...state,

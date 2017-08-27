@@ -12,6 +12,7 @@
     "classnames": "^2.2.5",
     "immutability-helper": "^2.0.0",
     "indexof": "0.0.1",
+    "jquery": "^3.2.1",
     "meteor-node-stubs": "^0.2.3",
     "moment": "^2.18.1",
     "parse-domain": "^1.1.0",

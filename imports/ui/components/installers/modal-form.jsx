@@ -1,6 +1,12 @@
 import React, { PropTypes } from 'react';
 import Form from 'antd/lib/form'; // for js
 import 'antd/lib/form/style/css'; // for css
+import Upload from 'antd/lib/upload'; // for js
+import 'antd/lib/upload/style/css'; // for css
+import Icon from 'antd/lib/icon'; // for js
+import 'antd/lib/icon/style/css'; // for css
+import Button from 'antd/lib/button'; // for js
+import 'antd/lib/button/style/css'; // for css
 import InputControlled from '../../components/forms/input-controlled';
 import TagsSelectControlled from '../../components/forms/tags-select-controlled';
 import AuxFunctions from '../../../api/aux-functions';
@@ -15,7 +21,13 @@ const FormItem = Form.Item;
 * Actions should be dispatched here and NOT in any child component!
 */
 const ModalForm = (props) => {
-  const { reduxState, handleInputChange, handleSubmit } = props;
+  const {
+    reduxState,
+    handleInputChange,
+    handleImageUpload,
+    handleSubmit,
+  } = props;
+
   const {
     addInstallerModalVisible,
     editInstallerModalVisible,
@@ -42,19 +54,6 @@ const ModalForm = (props) => {
       className="mt2"
     >
       <FormItem
-        label="Logo"
-        validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'logo') && 'error') || ''}
-        help={AuxFunctions.getFieldNameErrors(errors, 'logo')}
-      >
-        <InputControlled
-          type="text"
-          id="logo"
-          placeholder="Logo"
-          value={logo}
-          onChange={handleInputChange}
-        />
-      </FormItem>
-      <FormItem
         label="Company name"
         validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'companyName') && 'error') || ''}
         help={AuxFunctions.getFieldNameErrors(errors, 'companyName')}
@@ -66,6 +65,38 @@ const ModalForm = (props) => {
           value={companyName}
           onChange={handleInputChange}
         />
+      </FormItem>
+      {/* <FormItem
+        label="Logo"
+        validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'logo') && 'error') || ''}
+        help={AuxFunctions.getFieldNameErrors(errors, 'logo')}
+      >
+        <InputControlled
+          type="text"
+          id="logo"
+          placeholder="Logo"
+          value={logo}
+          onChange={handleInputChange}
+        />
+      </FormItem> */}
+      <FormItem
+        label="Logo"
+        validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'logo') && 'error') || ''}
+        help={AuxFunctions.getFieldNameErrors(errors, 'logo')}
+      >
+        <input
+          type="file"
+          onChange={(evt) => {
+            const files = evt.target.files;
+            // Pass data up to parent component
+            handleImageUpload(files);
+          }}
+        />
+        {/* <Upload onChange={handleImageUpload}>
+          <Button>
+            <Icon type="upload" /> Click to Upload
+          </Button>
+        </Upload> */}
       </FormItem>
       <FormItem
         label="Address 1"
@@ -190,6 +221,8 @@ ModalForm.propTypes = {
     }).isRequired,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
+  handleImageUpload: PropTypes.func.isRequired,
+  handleImageDeleteButtonClick: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 };
 

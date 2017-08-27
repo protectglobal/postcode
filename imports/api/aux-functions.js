@@ -9,6 +9,22 @@ import _ from 'underscore';
 const AuxFunctions = {};
 
 //------------------------------------------------------------------------------
+AuxFunctions.checkImageSize = (file) => {
+  // console.log('AuxFunctions.checkImageSize', file);
+  return file && file.size && file.size <= 4 * 1000000; // 4 MB
+};
+//------------------------------------------------------------------------------
+AuxFunctions.checkImageFormat = (file) => {
+  // console.log('AuxFunctions.checkImageFormat', file);
+  // Checks
+  if (!file || !file.type) {
+    return false;
+  }
+
+  const tokens = file.type.split('/');
+  return tokens[0] === 'image';
+};
+//------------------------------------------------------------------------------
 /**
 * @summary Validate if a given string is a feasible dollar amount.
 *

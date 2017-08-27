@@ -5,12 +5,14 @@ import Modal from 'antd/lib/modal'; // for js
 import 'antd/lib/modal/style/css'; // for css
 import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
-import { _ } from 'underscore';
+import _ from 'underscore';
+import { Cloudinary } from 'meteor/lepozepo:cloudinary';
 import { Bert } from 'meteor/themeteorchef:bert';
 import ModalForm from './modal-form';
 import Actions from '../../../api/redux/client/actions';
 import AuxFunctions from '../../../api/aux-functions';
 import Installers from '../../../api/installers/namespace';
+import Images from '../../../api/images/namespace';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -26,6 +28,8 @@ class AddInstallerModal extends Component {
     this.handleAddInstallerButtonClick = this.handleAddInstallerButtonClick.bind(this);
     this.handleAddInstallerModalCancel = this.handleAddInstallerModalCancel.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
+    this.handleImageDeleteButtonClick = this.handleImageDeleteButtonClick.bind(this);
     this.handleAddInstallerSubmit = this.handleAddInstallerSubmit.bind(this);
   }
 
@@ -57,6 +61,90 @@ class AddInstallerModal extends Component {
     if (errors[fieldName].length > 0) {
       reduxActions.dispatchClearErrors(fieldName);
     }
+  }
+
+  handleImageUpload(files) {
+    const { reduxActions } = this.props;
+    console.log('handleUpload');
+    // Clear errors if any
+    reduxActions.dispatchClearErrors('logo');
+
+    // Disable upload button
+    reduxActions.dispatchSetBooleanField('canUpload', false);
+
+    // Show loading indicator
+    reduxActions.dispatchSetBooleanField('uploadingImage', true);
+
+    // Check for errors (number of images, file size and format)
+    const errors = Images.apiBoth.checkImages(files, 'logo', 1);
+
+    // In case of errors, warn user and prevent the meteor method to be called
+    if (AuxFunctions.hasErrors(errors)) {
+      // Display errors on UI
+      reduxActions.dispatchSetErrors(errors);
+      // Display flash notification
+      Bert.alert('The form has errors', 'danger', 'growl-top-right');
+      // Hide loading indicator
+      reduxActions.dispatchSetBooleanField('uploadingImage', false);
+      // Re-enable upload button
+      reduxActions.dispatchSetBooleanField('canUpload', true);
+      return;
+    }
+
+    console.log('upload to cloudinary');
+
+    // TODO: shouldn't we use _.each file?
+    Cloudinary.upload(files, (err1, res1) => {
+      console.log(err1, res1);
+      if (err1) {
+        Bert.alert(err1.reason, 'danger', 'growl-top-right');
+        // Remove loading indicator from UI
+        reduxActions.dispatchSetBooleanField('uploadingImage', false);
+      } else {
+        console.log('[uploader] success');
+        // Save image into DB
+        const { public_id, url, secure_url, width, height } = res1;
+        const newImage = {
+          publicId: public_id,
+          url,
+          secureUrl: secure_url,
+          width,
+          height,
+        };
+
+        Meteor.call('Images.methodsServer.saveImage', newImage, (err2, res2) => {
+          if (err2) {
+            Bert.alert(err2.reason, 'danger', 'growl-top-right');
+          } else {
+            // Save imageId into redux store
+            reduxActions.dispatchUpdateTextField('imageId', res2.imageId);
+            // TODO: save imageId and/or secureUrl into installers collection
+          }
+          // Remove loading indicator from UI
+          reduxActions.dispatchSetBooleanField('uploadingImage', false);
+          // Re-enable upload button
+          reduxActions.dispatchSetBooleanField('canUpload', true);
+        });
+      }
+    });
+  }
+
+  handleImageDeleteButtonClick(publicId) {
+    // Delete image from DB
+    Meteor.call('Images.methods.removeImage', publicId, (err1) => {
+      if (err1) {
+        Bert.alert(err1.reason, 'danger', 'growl-top-right');
+      } else {
+        // Delete image from Cloudinary server
+        Cloudinary.delete(publicId, (err2) => {
+          if (err2) {
+            Bert.alert(err2.reason, 'danger', 'growl-top-right');
+          } else {
+            console.log('[image] deleted');
+          }
+        });
+      }
+    });
   }
 
   handleAddInstallerSubmit() {
@@ -141,6 +229,8 @@ class AddInstallerModal extends Component {
           <ModalForm
             reduxState={reduxState}
             handleInputChange={this.handleInputChange}
+            handleImageUpload={this.handleImageUpload}
+            handleImageDeleteButtonClick={this.handleImageDeleteButtonClick}
             handleSubmit={this.handleAddInstallerSubmit}
           />
         </Modal>

@@ -22,5 +22,14 @@
     "times": {
       "humanLivesUpto": "3600000"
     }
+  },
+  "public": {
+    "cloudinary": {
+      "cloudName": "dxot4z4ma"
+    }
+  },
+  "cloudinary": {
+    "apiKey": "488285919113964",
+    "apiSecret": "ftqQ5Ed7yUh978sCLL5Y5P-bmko"
   }
 }
