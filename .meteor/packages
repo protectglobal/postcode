@@ -36,7 +36,7 @@ accounts-password@1.4.0
 nimble:restivus
 http@1.2.12
 percolate:synced-cron
-#email
+email
 force-ssl@1.0.14
 facebook-config-ui
 dynamic-import
@@ -44,3 +44,5 @@ meteorhacks:sikka
 matb33:collection-hooks
 nathantreid:css-modules
 mdg:validated-method
+lepozepo:cloudinary
+meteorhacks:aggregate

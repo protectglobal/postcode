@@ -9,6 +9,44 @@ const InstallersApiBoth = {};
 
 //------------------------------------------------------------------------------
 /**
+* @summary Verify logo size and format.
+* @param {[file]} - files. Array of files.
+* @return {object} - errors.
+*/
+InstallersApiBoth.checkLogo = (files) => {
+  console.log('Installers.apiBoth.checkLogo input:', files);
+  // check(files, [Object]);
+
+  // Initialize errors
+  const errors = {
+    logo: [],
+  };
+
+  const limit = 1;
+
+  // Checks
+  if (files.length > limit) {
+    errors.logo.push(`You can upload up to ${limit} images`);
+  }
+
+  const file = files[0];
+
+  if (!file) {
+    errors.logo.push('Logo is required');
+  }
+
+  if (!AuxFunctions.checkFileFormat(file, ['image'])) {
+    errors.logo.push('File has wrong format');
+  }
+
+  if (!AuxFunctions.checkFileSize(file, 4 * 1000000)) { // 4MB
+    errors.logo.push('Image is too big');
+  }
+
+  return errors;
+};
+//------------------------------------------------------------------------------
+/**
 * @summary Verify fields before inserting doc into database.
 * @param {object} - installer = { logo, companyName, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
@@ -17,8 +55,8 @@ const InstallersApiBoth = {};
 InstallersApiBoth.checkInstallerFields = (installer) => {
   // console.log('Installers.apiBoth.checkInstallerFields input:', installer);
   check(installer, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -30,8 +68,8 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
 
   // Destructure
   const {
-    logo,
     companyName,
+    logo,
     addressOne,
     addressTwo,
     postalCode,
@@ -43,8 +81,8 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
 
   // Initialize errors
   const errors = {
-    logo: [],
     companyName: [],
+    logo: [],
     addressOne: [],
     addressTwo: [],
     postalCode: [],
@@ -55,12 +93,12 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
   };
 
   // Checks
-  if (!logo || logo.trim().length === 0) {
-    errors.logo.push('Logo is required');
-  }
-
   if (!companyName || companyName.trim().length === 0) {
     errors.companyName.push('Company Name is required');
+  }
+
+  if (!logo || !logo.publicId) {
+    errors.logo.push('Logo is required');
   }
 
   if (!addressOne || addressOne.trim().length === 0) {

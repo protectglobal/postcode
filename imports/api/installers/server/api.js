@@ -1,6 +1,8 @@
 import { EJSON } from 'meteor/ejson';
 import { check, Match } from 'meteor/check';
+import { Email } from 'meteor/email';
 import AuxFunctions from '../../aux-functions.js';
+import Constants from '../../constants.js';
 import InstallersCollection from '../collection.js';
 import InstallersApiBoth from '../api.js';
 
@@ -13,7 +15,7 @@ const InstallersApiServer = {};
 * function must be called from a trusted source (server) since we are not
 * validating the user credentials.
 * @param {string} - curUserId. Current user id.
-* @param {object} - newInstaller = { logo, companyName, addressOne, addressTwo,
+* @param {object} - newInstaller = { companyName, logo, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
 * @return {string} - installerId.
 */
@@ -21,8 +23,8 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   // console.log('Installers.apiServer.insertInstaller input:', curUserId, newInstaller);
   check(curUserId, String);
   check(newInstaller, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -75,7 +77,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
 * source (server) since we are not validating the user credentials.
 * @param {string} - curUserId. Current user id.
 * @param {string} - installerId. Id of the installer we want to update.
-* @param {object} - installer = { logo, companyName, addressOne, addressTwo,
+* @param {object} - installer = { companyName, logo, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
 * @return {string} - installerId.
 */
@@ -84,8 +86,8 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   check(curUserId, String);
   check(installerId, String);
   check(installer, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -129,6 +131,125 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   return {
     err: null,
     installerId,
+  };
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Delete installer. This function must be called from a trusted source
+* (server) since we are not validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to delete.
+*/
+InstallersApiServer.removeInstaller = (curUserId, installerId) => {
+  // console.log('Installers.apiServer.removeInstaller input:', curUserId, installerId);
+  check(curUserId, String);
+  check(installerId, String);
+
+  // Delete document
+  try {
+    InstallersCollection.remove({ _id: installerId });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      err: {
+        reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
+      },
+    };
+  }
+
+  return { err: null };
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Get assignee installer for the given postal code based on postal
+* areas. This function must be called from a trusted source (server) since we
+* are not validating the user credentials.
+* @param {string} - postalCode. Postal code.
+* @return {object} - installer. Installer serving the given postal code.
+*/
+InstallersApiServer.getAssignee = (postalCode) => {
+  console.log('Installers.apiServer.getAssignee input:', postalCode);
+  check(postalCode, String);
+
+  // TODO: Get installer serving postal code
+  // (for now, just return a random document)
+  const pipeline = [
+    { $sample: { size: 1 } },
+  ];
+  let installer = InstallersCollection.aggregate(pipeline)[0];
+
+  // TODO: In case postal code doesn't match any postal areas, return default
+  // installer
+  if (!installer) {
+    installer = InstallersCollection.findOne({ isDefaultInstaller: true });
+
+    if (!installer) {
+      return {
+        err: {
+          reason: 'Default installer is not set!',
+        },
+        installer: null,
+      };
+    }
+  }
+
+  return {
+    err: null,
+    installer,
+  };
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Send email (containing customer's data) to assigned installer . This
+* function must be called from a trusted source (server) since we are not
+* validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to delete.
+*/
+InstallersApiServer.sendEmail = (installerId, customer) => {
+  console.log('Installers.apiServer.sendEmail input:', installerId, installerId);
+  check(installerId, String);
+  check(customer, {
+    _id: String,
+    createdAt: Date,
+    name: String,
+    postalCode: String,
+    phoneNumber: String,
+    email: String,
+  });
+
+  // Get installer's data
+  const installer = InstallersCollection.findOne({ _id: installerId });
+
+  if (!installer) {
+    return {
+      deliveryStatus: 'failed',
+    };
+  }
+
+  // Delete document
+  try {
+    Email.send({
+      to: installer.email,
+      from: `no-reply@${Constants.DOMAIN_NAME}`,
+      subject: 'Customer\'s installation request',
+      text: `
+        Customer's data:\n
+        Name: ${customer.name};\n
+        Postal code: ${customer.postalCode};\n,
+        Phone number: ${customer.phoneNumber};\n,
+        Email: ${customer.email};\n
+      `,
+    });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      deliveryStatus: 'failed',
+    };
+  }
+
+  return {
+    deliveryStatus: 'sent',
   };
 };
 //------------------------------------------------------------------------------

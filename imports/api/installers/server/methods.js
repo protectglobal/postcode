@@ -12,8 +12,8 @@ import InstallersApiServer from './api.js';
 Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
   // console.log('Installers.methods.addInstaller', newInstaller);
   check(newInstaller, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -55,8 +55,8 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
   // console.log('Installers.methods.editInstaller', installerId, installer);
   check(installerId, String);
   check(installer, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -85,6 +85,38 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
   }
 
   const { err } = InstallersApiServer.editInstaller(curUserId, installerId, installer);
+  if (err) {
+    // Bubble up error to client view
+    throw new Error(500, err.reason);
+  }
+} });
+//------------------------------------------------------------------------------
+/**
+* @summary Delete installer from DB.
+*/
+Meteor.methods({ 'Installers.methods.removeInstaller'(installerId) {
+  // console.log('Installers.methods.removeInstaller', installerId);
+  check(installerId, String);
+
+  // Get current user.
+  const curUserId = this.userId;
+
+  // Verify current user is logged in.
+  if (!curUserId) {
+    throw new Error(403, 'User is not logged in at Installers.methods.removeInstaller');
+  }
+
+  // Is the account verified?
+  if (!Users.apiBoth.isAccountVerified(curUserId)) {
+    throw new Error(403, 'User account is not verified at Installers.methods.removeInstaller');
+  }
+
+  // Check user role
+  if (!Roles.userIsInRole(curUserId, Constants.INSTALLERS_PAGE_ROLES)) {
+    throw new Error(403, 'Wrong user role at Installers.methods.removeInstaller');
+  }
+
+  const { err } = InstallersApiServer.removeInstaller(curUserId, installerId);
   if (err) {
     // Bubble up error to client view
     throw new Error(500, err.reason);

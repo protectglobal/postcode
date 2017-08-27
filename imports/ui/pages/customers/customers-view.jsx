@@ -49,6 +49,28 @@ const CustomersView = (props) => {
       dataIndex: 'createdAt',
       key: 'createdAt',
     },
+    {
+      title: 'Assigned installer',
+      dataIndex: 'installer',
+      key: 'installer',
+      render: ({ id, companyName }) => {
+        if (id && companyName) {
+          return (
+            <p>
+              id: {id}
+              <br />
+              Company name: {companyName}
+            </p>
+          );
+        }
+        return null;
+      },
+    },
+    {
+      title: 'Email delivery status',
+      dataIndex: 'emailDeliveryStatus',
+      key: 'emailDeliveryStatus',
+    },
   ];
 
   return (
@@ -67,7 +89,22 @@ const CustomersView = (props) => {
 CustomersView.propTypes = {
   meteorData: PropTypes.shape({
     customersReady: PropTypes.bool.isRequired,
-    customers: PropTypes.array.isRequired,
+    customers: PropTypes.arrayOf(
+      PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        key: PropTypes.string.isRequired,
+        createdAt: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        postalCode: PropTypes.string.isRequired,
+        phoneNumber: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        installer: PropTypes.oneOf({}, {
+          id: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+        }),
+        emailDeliveryStatus: PropTypes.oneOf(['', 'failed', 'sent']),
+      }).isRequired,
+    ).isRequired,
   }).isRequired,
 };
 

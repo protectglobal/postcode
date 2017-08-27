@@ -1,9 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Meteor } from 'meteor/meteor';
-// import { Accounts } from 'meteor/accounts-base';
 import { createContainer } from 'meteor/react-meteor-data';
-// import { Bert } from 'meteor/themeteorchef:bert';
+import { Bert } from 'meteor/themeteorchef:bert';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Roles } from 'meteor/alanning:roles';
 import _ from 'underscore';
@@ -26,6 +25,7 @@ class InstallersPage extends Component {
   constructor(props) {
     super(props);
     this.handleEditInstallerButtonClick = this.handleEditInstallerButtonClick.bind(this);
+    this.handleDeleteInstallerButtonClick = this.handleDeleteInstallerButtonClick.bind(this);
   }
 
   handleEditInstallerButtonClick({ _id: installerId }) {
@@ -41,15 +41,36 @@ class InstallersPage extends Component {
     // the form rendered inside the edit installer modal
     const keys = _.keys(installer);
     _.each(keys, (key) => {
-      if (key !== 'postalAreas') {
-        reduxActions.dispatchUpdateTextField(key, installer[key]);
-      } else {
+      if (key === 'postalAreas') {
         reduxActions.dispatchSetArrayField(key, installer[key]);
+      } else if (key === 'logo') {
+        reduxActions.dispatchSetObjectField(key, installer[key]);
+      } else {
+        reduxActions.dispatchUpdateTextField(key, installer[key]);
       }
     });
 
     // Open modal
     reduxActions.dispatchSetBooleanField('editInstallerModalVisible', true);
+  }
+
+  handleDeleteInstallerButtonClick(installerId) {
+    // This method is fired when the delete button is clicked. It receives as an
+    // argument the installer that the user wants to delete.
+    const { reduxActions } = this.props;
+
+    // Disable all delete buttons
+    reduxActions.dispatchSetBooleanField('canDelete', false);
+
+    Meteor.call('Installers.methods.removeInstaller', installerId, (err) => {
+      if (err) {
+        Bert.alert('The form has errors', 'danger', 'growl-top-right');
+      } else {
+        Bert.alert('Installer removed successfully!', 'success', 'growl-top-right');
+      }
+      // Re-enable submit button
+      reduxActions.dispatchSetBooleanField('canDelete', true);
+    });
   }
 
   render() {
@@ -62,6 +83,7 @@ class InstallersPage extends Component {
         meteorData={meteorData}
         // Pass methods down
         handleEditInstallerButtonClick={this.handleEditInstallerButtonClick}
+        handleDeleteInstallerButtonClick={this.handleDeleteInstallerButtonClick}
       />
     );
   }
@@ -116,6 +138,12 @@ function mapDispatchToProps(dispatch) {
     dispatchClearArrayField(fieldName) {
       return dispatch(Actions.clearArrayField(namespace, fieldName));
     },
+    dispatchSetObjectField(fieldName, value) {
+      return dispatch(Actions.setObjectField(namespace, fieldName, value));
+    },
+    dispatchClearObjectField(fieldName) {
+      return dispatch(Actions.clearObjectField(namespace, fieldName));
+    },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));
     },
@@ -169,8 +197,8 @@ const InstallersPageContainer = createContainer(() => {
   const installers = Installers.collection.find({}, { sort: { createdAt: -1 } }).map((installer) => {
     const {
       _id,
-      logo,
       companyName,
+      logo,
       addressOne,
       addressTwo,
       postalCode,
@@ -183,8 +211,8 @@ const InstallersPageContainer = createContainer(() => {
     return {
       _id,
       key: _id, // required by antd table
-      logo: logo || '',
       companyName: companyName || '',
+      logo: logo || {},
       addressOne: addressOne || '',
       addressTwo: addressTwo || '',
       postalCode: postalCode || '',

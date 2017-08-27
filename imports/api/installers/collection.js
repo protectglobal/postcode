@@ -49,12 +49,44 @@ InstallersCollection.attachSchema(new SimpleSchema({
     denyUpdate: true,
   },
 
-  logo: {
+  companyName: {
     type: String,
-    optional: true,
   },
 
-  companyName: {
+  logo: {
+    type: Object,
+    label: 'Cloudinary data',
+  },
+
+  'logo.publicId': {
+    type: String,
+  },
+
+  'logo.resourceType': {
+    type: String,
+  },
+
+  'logo.format': {
+    type: String,
+  },
+
+  'logo.bytes': {
+    type: Number,
+  },
+
+  'logo.height': {
+    type: Number,
+  },
+
+  'logo.width': {
+    type: Number,
+  },
+
+  'logo.url': {
+    type: String,
+  },
+
+  'logo.secureUrl': {
     type: String,
   },
 

@@ -5,7 +5,7 @@ import Modal from 'antd/lib/modal'; // for js
 import 'antd/lib/modal/style/css'; // for css
 import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
-import { _ } from 'underscore';
+import _ from 'underscore';
 import { Bert } from 'meteor/themeteorchef:bert';
 import ModalForm from './modal-form';
 import Actions from '../../../api/redux/client/actions';
@@ -25,7 +25,6 @@ class AddInstallerModal extends Component {
     super(props);
     this.handleAddInstallerButtonClick = this.handleAddInstallerButtonClick.bind(this);
     this.handleAddInstallerModalCancel = this.handleAddInstallerModalCancel.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleAddInstallerSubmit = this.handleAddInstallerSubmit.bind(this);
   }
 
@@ -43,29 +42,13 @@ class AddInstallerModal extends Component {
     reduxActions.dispatchSetBooleanField('addInstallerModalVisible', false);
   }
 
-  handleInputChange({ fieldName, value }) { // { fieldName: 'companyName', value: 'Protect Global' }
-    const { reduxState, reduxActions } = this.props;
-    const { errors } = reduxState;
-
-    if (fieldName !== 'postalAreas') {
-      reduxActions.dispatchUpdateTextField(fieldName, value);
-    } else {
-      reduxActions.dispatchSetArrayField(fieldName, value);
-    }
-
-    // Clear errors if any
-    if (errors[fieldName].length > 0) {
-      reduxActions.dispatchClearErrors(fieldName);
-    }
-  }
-
   handleAddInstallerSubmit() {
     const { reduxState, reduxActions } = this.props;
 
     // List the fields that we are going to use.
     const fields = [
-      'logo',
       'companyName',
+      'logo',
       'addressOne',
       'addressTwo',
       'postalCode',
@@ -139,8 +122,6 @@ class AddInstallerModal extends Component {
           onCancel={this.handleAddInstallerModalCancel}
         >
           <ModalForm
-            reduxState={reduxState}
-            handleInputChange={this.handleInputChange}
             handleSubmit={this.handleAddInstallerSubmit}
           />
         </Modal>
@@ -153,8 +134,17 @@ AddInstallerModal.propTypes = {
   reduxState: PropTypes.shape({
     canAdd: PropTypes.bool.isRequired,
     addInstallerModalVisible: PropTypes.bool.isRequired,
-    logo: PropTypes.string.isRequired,
     companyName: PropTypes.string.isRequired,
+    logo: PropTypes.oneOf({}, {
+      publicId: PropTypes.string.isRequired,
+      resourceType: PropTypes.string.isRequired,
+      format: PropTypes.string.isRequired,
+      bytes: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+      url: PropTypes.string.isRequired,
+      secureUrl: PropTypes.string.isRequired,
+    }),
     addressOne: PropTypes.string.isRequired,
     addressTwo: PropTypes.string.isRequired,
     postalCode: PropTypes.string.isRequired,
@@ -163,8 +153,8 @@ AddInstallerModal.propTypes = {
     email: PropTypes.string.isRequired,
     postalAreas: PropTypes.array.isRequired,
     errors: PropTypes.shape({
-      logo: PropTypes.array.isRequired,
       companyName: PropTypes.array.isRequired,
+      logo: PropTypes.array.isRequired,
       addressOne: PropTypes.array.isRequired,
       addressTwo: PropTypes.array.isRequired,
       postalCode: PropTypes.array.isRequired,
@@ -204,6 +194,12 @@ function mapDispatchToProps(dispatch) {
     },
     dispatchClearArrayField(fieldName) {
       return dispatch(Actions.clearArrayField(namespace, fieldName));
+    },
+    dispatchSetObjectField(fieldName, value) {
+      return dispatch(Actions.setObjectField(namespace, fieldName, value));
+    },
+    dispatchClearObjectField(fieldName) {
+      return dispatch(Actions.clearObjectField(namespace, fieldName));
     },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));

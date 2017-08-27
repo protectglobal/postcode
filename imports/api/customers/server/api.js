@@ -13,7 +13,7 @@ const CustomersApiServer = {};
 * function must be called from a trusted source (server) since we are not
 * validating the user credentials.
 * @param {object} - newCustomer = { name, postalCode, phoneNumber, email }.
-* @return {string} - customerId.
+* @return {object} - customer.
 */
 CustomersApiServer.insertCustomer = (newCustomer) => {
   console.log('Customers.apiServer.insertCustomer input:', newCustomer);
@@ -31,7 +31,7 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
       err: {
         reason: AuxFunctions.getFirstError(errors).value,
       },
-      customerId: null,
+      customer: null,
     };
   }
 
@@ -48,14 +48,74 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
       err: {
         reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
       },
-      customerId: null,
+      customer: null,
     };
   }
 
+  // Return the new doc
   return {
     err: null,
-    customerId,
+    customer: CustomersCollection.findOne({ _id: customerId }),
   };
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Save assigned installer id into customer doc. This function must be
+* called from a trusted source (server) since we are not validating the user
+* credentials.
+* @param {string} - customerId.
+* @return {object} - installer.
+*/
+CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
+  console.log('Customers.apiServer.setAssignedInstaller input:', customerId, installer);
+  check(customerId, String);
+  check(installer, {
+    _id: String,
+    createdAt: Date,
+    createdBy: String,
+    companyName: String,
+    logo: Object,
+    addressOne: String,
+    addressTwo: Match.Maybe(String),
+    postalCode: String,
+    city: String,
+    phoneNumber: String,
+    email: String,
+    postalAreas: [String],
+    updatedAt: Match.Maybe(Date),
+    updatedBy: Match.Maybe(String),
+  });
+
+  // Destructure
+  const { _id, companyName } = installer;
+
+  // Update document
+  const modifier = {
+    $set: {
+      installer: {
+        id: _id,
+        companyName,
+      },
+    },
+  };
+  CustomersCollection.update({ _id: customerId }, modifier);
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Save email delivery status into customer doc. This function must be
+* called from a trusted source (server) since we are not validating the user
+* credentials.
+* @param {string} - customerId.
+* @return {string} - deliveryStatus. ['sent', 'failed']
+*/
+CustomersApiServer.setEmailDeliveryStatus = (customerId, deliveryStatus) => {
+  console.log('Customers.apiServer.setEmailDeliveryStatus input:', customerId, deliveryStatus);
+  check(customerId, String);
+  check(deliveryStatus, Match.OneOf('sent', 'failed'));
+
+  // Update document
+  const modifier = { $set: { emailDeliveryStatus: deliveryStatus } };
+  CustomersCollection.update({ _id: customerId }, modifier);
 };
 //------------------------------------------------------------------------------
 

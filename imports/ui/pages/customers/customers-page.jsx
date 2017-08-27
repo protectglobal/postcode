@@ -95,7 +95,18 @@ const CustomersPageContainer = createContainer(() => {
 
   // Format data to be displayed in table.
   const customers = Customers.collection.find({}, { sort: { createdAt: -1 } }).map((customer) => {
-    const { _id, createdAt, name, postalCode, phoneNumber, email } = customer;
+    // Destructure
+    const {
+      _id,
+      createdAt,
+      name,
+      postalCode,
+      phoneNumber,
+      email,
+      installer,
+      emailDeliveryStatus,
+    } = customer;
+
     return {
       _id,
       key: _id, // required by antd component
@@ -104,6 +115,8 @@ const CustomersPageContainer = createContainer(() => {
       postalCode: postalCode || '',
       phoneNumber: phoneNumber || '',
       email: email || '',
+      installer: installer || {},
+      emailDeliveryStatus: emailDeliveryStatus || '',
     };
   });
 

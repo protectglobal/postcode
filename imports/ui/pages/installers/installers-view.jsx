@@ -21,48 +21,34 @@ import style from './style.scss';
 //------------------------------------------------------------------------------
 const InstallersView = (props) => {
   const {
-    // state,
-    // reduxState,
     meteorData,
     handleEditInstallerButtonClick,
-    /* handleFilterDropdownVisibleChange,
-    handleSearchTextChange,
-    handleFilter, */
+    handleDeleteInstallerButtonClick,
   } = props;
-
-  /* const {
-    addInstallerModalVisible,
-    editInstallerModalVisible,
-  } = reduxState; */
 
   const {
     installersReady,
     installers,
-    /* filter,
-    filterDropdownVisible,
-    siteUrlSearchText,
-    nameSearchText,
-    aboutSearchText, */
   } = meteorData;
 
   // Table columns, see: https://ant.design/components/table/
   const columns = [
     {
+      title: 'Company name',
+      dataIndex: 'companyName',
+      key: 'companyName',
+    },
+    {
       title: 'Logo',
       dataIndex: 'logo',
       key: 'logo',
-      render: url => (
+      render: ({ url, secureUrl }) => (
         <img
-          src={url}
+          src={secureUrl || url || '/camera-image.svg'}
           alt="company logo"
           className={style.logo}
         />
       ),
-    },
-    {
-      title: 'Company name',
-      dataIndex: 'companyName',
-      key: 'companyName',
     },
     {
       title: 'Address 1',
@@ -118,20 +104,35 @@ const InstallersView = (props) => {
       },
     },
     {
-      title: 'Edit',
-      key: 'edit',
+      title: 'Actions',
+      key: 'actions',
       render: (text, record) => (
-        <a
-          href="#"
-          onClick={(e) => {
-            // When the edit button is clicked the modal is open and the form
-            // is pre-filled using the record data
-            e.preventDefault();
-            handleEditInstallerButtonClick(record);
-          }}
-        >
-          Edit
-        </a>
+        <div>
+          <Button
+            type="primary"
+            onClick={() => {
+              // When the edit button is clicked the modal is open and the form
+              // is pre-filled using the record data
+              handleEditInstallerButtonClick(record);
+            }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Sure you want to delete this installer?"
+            onConfirm={() => { handleDeleteInstallerButtonClick(record._id); }}
+            onCancel={() => {}}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              type="danger"
+              className="ml1"
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+        </div>
       ),
     },
   ];
@@ -156,24 +157,31 @@ InstallersView.propTypes = {
   meteorData: PropTypes.shape({
     curUser: PropTypes.object,
     installersReady: PropTypes.bool.isRequired,
-    installers: PropTypes.array.isRequired,
+    installers: PropTypes.arrayOf(
+      PropTypes.shape({
+        companyName: PropTypes.string.isRequired,
+        logo: PropTypes.oneOf({}, {
+          publicId: PropTypes.string.isRequired,
+          resourceType: PropTypes.string.isRequired,
+          format: PropTypes.string.isRequired,
+          bytes: PropTypes.number.isRequired,
+          height: PropTypes.number.isRequired,
+          width: PropTypes.number.isRequired,
+          url: PropTypes.string.isRequired,
+          secureUrl: PropTypes.string.isRequired,
+        }),
+        addressOne: PropTypes.string.isRequired,
+        addressTwo: PropTypes.string.isRequired,
+        postalCode: PropTypes.string.isRequired,
+        city: PropTypes.string.isRequired,
+        phoneNumber: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        postalAreas: PropTypes.array.isRequired,
+      }).isRequired,
+    ).isRequired,
   }).isRequired,
-  /* reduxState: PropTypes.shape({
-    addInstallerModalVisible: PropTypes.bool.isRequired,
-    editInstallerModalVisible: PropTypes.bool.isRequired,
-  }).isRequired, */
-  /* state: PropTypes.shape({
-    filter: PropTypes.string.isRequired,
-    filterDropdownVisible: PropTypes.bool.isRequired,
-    data: PropTypes.array.isRequired,
-    siteUrlSearchText: PropTypes.string.isRequired,
-    nameSearchText: PropTypes.string.isRequired,
-    aboutSearchText: PropTypes.string.isRequired,
-  }).isRequired, */
   handleEditInstallerButtonClick: PropTypes.func.isRequired,
-  /* handleFilterDropdownVisibleChange: PropTypes.func.isRequired,
-  handleSearchTextChange: PropTypes.func.isRequired,
-  handleFilter: PropTypes.func.isRequired, */
+  handleDeleteInstallerButtonClick: PropTypes.func.isRequired,
 };
 
 export default InstallersView;
