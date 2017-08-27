@@ -174,7 +174,9 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         };
       }
 
-      const { err: err2, installer } = Installers.apiServer.getAssignee(customer.postalcode);
+      const customerPostalCode = customer.postalCode;
+      console.log(err1, customerPostalCode, typeof customerPostalCode);
+      const { err: err2, installer } = Installers.apiServer.getAssignee(customerPostalCode);
 
       // Handle error
       if (err2) {
@@ -191,13 +193,15 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
       // the green light to move ahead
       Meteor.defer(() => {
         // Save assigned installer into customer record
-        Customers.apiServer.setAssignedInstaller(customer._id, installer);
+        const customerId = customer._id;
+        const installerId = installer._id;
+        Customers.apiServer.setAssignedInstaller(customerId, Object.assign({}, installer));
 
         // Send email containing customer data to installer
-        const { deliveryStatus } = Installers.apiServer.sendEmail(installer._id, customer);
+        const { deliveryStatus } = Installers.apiServer.sendEmail(installerId, Object.assign({}, customer));
 
         // Save email delivery status into customer record
-        Customers.apiServer.setEmailDeliveryStatus(customer._id, deliveryStatus);
+        Customers.apiServer.setEmailDeliveryStatus(customerId, deliveryStatus);
       });
 
       // Handle success

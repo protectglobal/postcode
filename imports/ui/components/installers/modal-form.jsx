@@ -53,7 +53,7 @@ class ModalForm extends Component {
 
   handleImageUpload(files) {
     const { reduxActions } = this.props;
-    console.log('handleUpload');
+
     // Clear errors if any
     reduxActions.dispatchClearErrors('logo');
 
@@ -79,11 +79,8 @@ class ModalForm extends Component {
       return;
     }
 
-    console.log('upload to cloudinary');
-
     // At this stage files must contain a single image
     Cloudinary.upload(files, (err1, res1) => {
-      console.log(err1, res1);
       if (err1) {
         Bert.alert(err1.reason, 'danger', 'growl-top-right');
         // Remove loading indicator from UI

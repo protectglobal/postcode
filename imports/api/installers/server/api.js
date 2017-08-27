@@ -1,6 +1,8 @@
 import { EJSON } from 'meteor/ejson';
 import { check, Match } from 'meteor/check';
+import { Email } from 'meteor/email';
 import AuxFunctions from '../../aux-functions.js';
+import Constants from '../../constants.js';
 import InstallersCollection from '../collection.js';
 import InstallersApiBoth from '../api.js';
 
@@ -166,15 +168,15 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
 * @return {object} - installer. Installer serving the given postal code.
 */
 InstallersApiServer.getAssignee = (postalCode) => {
-  // console.log('Installers.apiServer.getAssignee input:', postalCode);
+  console.log('Installers.apiServer.getAssignee input:', postalCode);
   check(postalCode, String);
 
   // TODO: Get installer serving postal code
   // (for now, just return a random document)
   const pipeline = [
-    { $sample: { _id: { $exists: true } } },
+    { $sample: { size: 1 } },
   ];
-  let installer = InstallersCollection.aggregate(pipeline);
+  let installer = InstallersCollection.aggregate(pipeline)[0];
 
   // TODO: In case postal code doesn't match any postal areas, return default
   // installer
@@ -194,6 +196,60 @@ InstallersApiServer.getAssignee = (postalCode) => {
   return {
     err: null,
     installer,
+  };
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Send email (containing customer's data) to assigned installer . This
+* function must be called from a trusted source (server) since we are not
+* validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to delete.
+*/
+InstallersApiServer.sendEmail = (installerId, customer) => {
+  console.log('Installers.apiServer.sendEmail input:', installerId, installerId);
+  check(installerId, String);
+  check(customer, {
+    _id: String,
+    createdAt: Date,
+    name: String,
+    postalCode: String,
+    phoneNumber: String,
+    email: String,
+  });
+
+  // Get installer's data
+  const installer = InstallersCollection.findOne({ _id: installerId });
+
+  if (!installer) {
+    return {
+      deliveryStatus: 'failed',
+    };
+  }
+
+  // Delete document
+  try {
+    Email.send({
+      to: installer.email,
+      from: `no-reply@${Constants.DOMAIN_NAME}`,
+      subject: 'Customer\'s installation request',
+      text: `
+        Customer's data:\n
+        Name: ${customer.name};\n
+        Postal code: ${customer.postalCode};\n,
+        Phone number: ${customer.phoneNumber};\n,
+        Email: ${customer.email};\n
+      `,
+    });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      deliveryStatus: 'failed',
+    };
+  }
+
+  return {
+    deliveryStatus: 'sent',
   };
 };
 //------------------------------------------------------------------------------

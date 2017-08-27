@@ -88,7 +88,14 @@ CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
   const { _id, companyName } = installer;
 
   // Update document
-  const modifier = { $set: { id: _id, companyName } };
+  const modifier = {
+    $set: {
+      installer: {
+        id: _id,
+        companyName,
+      },
+    },
+  };
   CustomersCollection.update({ _id: customerId }, modifier);
 };
 //------------------------------------------------------------------------------
@@ -102,10 +109,10 @@ CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
 CustomersApiServer.setEmailDeliveryStatus = (customerId, deliveryStatus) => {
   console.log('Customers.apiServer.setEmailDeliveryStatus input:', customerId, deliveryStatus);
   check(customerId, String);
-  check(deliveryStatus, Match.OneOf(['sent', 'failed']));
+  check(deliveryStatus, Match.OneOf('sent', 'failed'));
 
   // Update document
-  const modifier = { $set: { deliveryStatus } };
+  const modifier = { $set: { emailDeliveryStatus: deliveryStatus } };
   CustomersCollection.update({ _id: customerId }, modifier);
 };
 //------------------------------------------------------------------------------
