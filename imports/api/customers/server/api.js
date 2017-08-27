@@ -82,6 +82,8 @@ CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
     phoneNumber: String,
     email: String,
     postalAreas: [String],
+    updatedAt: Match.Maybe(Date),
+    updatedBy: Match.Maybe(String),
   });
 
   // Destructure

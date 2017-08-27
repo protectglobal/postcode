@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Restivus } from 'meteor/nimble:restivus';
 import { EJSON } from 'meteor/ejson';
-// import _ from 'underscore';
+import _ from 'underscore';
 import Customers from '../../api/customers/namespace.js';
 import Installers from '../../api/installers/namespace.js';
 
@@ -175,7 +175,6 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
       }
 
       const customerPostalCode = customer.postalCode;
-      console.log(err1, customerPostalCode, typeof customerPostalCode);
       const { err: err2, installer } = Installers.apiServer.getAssignee(customerPostalCode);
 
       // Handle error
@@ -204,12 +203,23 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         Customers.apiServer.setEmailDeliveryStatus(customerId, deliveryStatus);
       });
 
+      // List of fields to return
+      const fields = [
+        'companyName',
+        'addressOne',
+        'addressTwo',
+        'postalCode',
+        'city',
+        'phoneNumber',
+        'email',
+      ];
+
       // Handle success
       return {
         statusCode: 200,
         body: {
           status: 'success',
-          message: `Assignee installer: ${EJSON.stringify(installer, { indent: true })}`,
+          message: `Assignee installer: ${EJSON.stringify(_.pick(installer, fields), { indent: true })}`,
         },
       };
     },
