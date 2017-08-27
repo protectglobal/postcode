@@ -13,7 +13,7 @@ const InstallersApiServer = {};
 * function must be called from a trusted source (server) since we are not
 * validating the user credentials.
 * @param {string} - curUserId. Current user id.
-* @param {object} - newInstaller = { logo, companyName, addressOne, addressTwo,
+* @param {object} - newInstaller = { companyName, logo, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
 * @return {string} - installerId.
 */
@@ -21,8 +21,8 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   // console.log('Installers.apiServer.insertInstaller input:', curUserId, newInstaller);
   check(curUserId, String);
   check(newInstaller, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -75,7 +75,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
 * source (server) since we are not validating the user credentials.
 * @param {string} - curUserId. Current user id.
 * @param {string} - installerId. Id of the installer we want to update.
-* @param {object} - installer = { logo, companyName, addressOne, addressTwo,
+* @param {object} - installer = { companyName, logo, addressOne, addressTwo,
 * postalCode, city, phoneNumber, email, postalAreas }.
 * @return {string} - installerId.
 */
@@ -84,8 +84,8 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   check(curUserId, String);
   check(installerId, String);
   check(installer, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,

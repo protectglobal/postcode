@@ -48,21 +48,21 @@ const InstallersView = (props) => {
   // Table columns, see: https://ant.design/components/table/
   const columns = [
     {
+      title: 'Company name',
+      dataIndex: 'companyName',
+      key: 'companyName',
+    },
+    {
       title: 'Logo',
       dataIndex: 'logo',
       key: 'logo',
-      render: url => (
+      render: ({ url, secureUrl }) => (
         <img
-          src={url}
+          src={secureUrl || url}
           alt="company logo"
           className={style.logo}
         />
       ),
-    },
-    {
-      title: 'Company name',
-      dataIndex: 'companyName',
-      key: 'companyName',
     },
     {
       title: 'Address 1',

@@ -169,8 +169,8 @@ const InstallersPageContainer = createContainer(() => {
   const installers = Installers.collection.find({}, { sort: { createdAt: -1 } }).map((installer) => {
     const {
       _id,
-      logo,
       companyName,
+      logo,
       addressOne,
       addressTwo,
       postalCode,
@@ -183,8 +183,8 @@ const InstallersPageContainer = createContainer(() => {
     return {
       _id,
       key: _id, // required by antd table
-      logo: logo || '',
       companyName: companyName || '',
+      logo: logo || {},
       addressOne: addressOne || '',
       addressTwo: addressTwo || '',
       postalCode: postalCode || '',

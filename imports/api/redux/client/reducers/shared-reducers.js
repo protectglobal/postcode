@@ -1,5 +1,5 @@
 import _ from 'underscore';
-// TODO: change name to 'common reducers'
+
 /**
 * Given the same arguments, it should calculate the next state and return it.
 * No surprises. No side effects. No API calls. No mutations. Just a calculation.
@@ -61,6 +61,17 @@ export const arrayFieldReducer = (state = [], action) => {
       return action.value;
     case 'CLEAR_ARRAY_FIELD':
       return [];
+    default:
+      return state;
+  }
+};
+
+export const objectFieldReducer = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_OBJECT_FIELD':
+      return action.value;
+    case 'CLEAR_OBJECT_FIELD':
+      return {};
     default:
       return state;
   }

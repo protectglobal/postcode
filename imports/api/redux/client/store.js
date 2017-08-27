@@ -7,7 +7,7 @@ import DevTools from './dev-tools.jsx';
 const logger = createLogger();
 
 const enhancers = [
-  // applyMiddleware(/* ReduxThunk, */ logger),
+  applyMiddleware(/* ReduxThunk, */ logger),
   DevTools.instrument(),
 ];
 

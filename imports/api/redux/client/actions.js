@@ -10,79 +10,6 @@ const setInitialState = namespace => (
   }
 );
 
-const changeView = (namespace, view) => (
-  {
-    type: 'CHANGE_VIEW',
-    namespace,
-    fieldName: 'view',
-    view,
-  }
-);
-
-const changeSearchType = (namespace, searchType) => (
-  {
-    type: 'CHANGE_SEARCH_TYPE',
-    namespace,
-    fieldName: 'searchType',
-    searchType,
-  }
-);
-
-// place = { placeId, description, coordinates, radius }
-// changedFields = { placeId, description, coordinates } or { radius }
-const updatePlace = (namespace, changedFields) => (
-  {
-    type: 'UPDATE_PLACE',
-    namespace,
-    fieldName: 'place',
-    changedFields,
-  }
-);
-
-const clearPlace = namespace => (
-  {
-    type: 'CLEAR_PLACE',
-    namespace,
-    fieldName: 'place',
-  }
-);
-
-const updateSelectedLocation = (namespace, selectedLocation) => (
-  {
-    type: 'UPDATE_SELECTED_LOCATION',
-    namespace,
-    fieldName: 'selectedLocation',
-    selectedLocation,
-  }
-);
-
-const clearSelectedLocation = namespace => (
-  {
-    type: 'CLEAR_SELECTED_LOCATION',
-    namespace,
-    fieldName: 'selectedLocation',
-  }
-);
-
-const updateMapBounds = (namespace, southWest, northEast, center) => (
-  {
-    type: 'UPDATE_MAP_BOUNDS',
-    namespace,
-    fieldName: 'mapBounds',
-    southWest,
-    northEast,
-    center,
-  }
-);
-
-const clearMapBounds = namespace => (
-  {
-    type: 'CLEAR_MAP_BOUNDS',
-    namespace,
-    fieldName: 'mapBounds',
-  }
-);
-
 const updateTextField = (namespace, fieldName, value) => (
   {
     type: 'UPDATE_TEXT_FIELD',
@@ -136,24 +63,6 @@ const setBooleanField = (namespace, fieldName, value) => (
   }
 );
 
-const checkRecalculateMarkersButtonDisplayState = (namespace, center, zoom) => (
-  {
-    type: 'CHECK_RECALCULATE_MARKERS_BUTTON_DISPLAY_STATE',
-    namespace,
-    fieldName: 'showRecalculateMarkersButton',
-    center,
-    zoom,
-  }
-);
-
-const hideRecalculateMarkersButton = namespace => (
-  {
-    type: 'HIDE_RECALCULATE_MARKERS_BUTTON',
-    namespace,
-    fieldName: 'showRecalculateMarkersButton',
-  }
-);
-
 const setArrayField = (namespace, fieldName, value) => (
   {
     type: 'SET_ARRAY_FIELD',
@@ -166,6 +75,23 @@ const setArrayField = (namespace, fieldName, value) => (
 const clearArrayField = (namespace, fieldName) => (
   {
     type: 'CLEAR_ARRAY_FIELD',
+    namespace,
+    fieldName,
+  }
+);
+
+const setObjectField = (namespace, fieldName, value) => (
+  {
+    type: 'SET_OBJECT_FIELD',
+    namespace,
+    fieldName,
+    value,
+  }
+);
+
+const clearObjectField = (namespace, fieldName) => (
+  {
+    type: 'CLEAR_OBJECT_FIELD',
     namespace,
     fieldName,
   }
@@ -192,24 +118,16 @@ const clearErrors = (namespace, fieldNameArray) => (
 // All actions go here. Every time an action is dispacthed, all reducers run.
 const Actions = {
   setInitialState,
-  changeView,
-  changeSearchType,
   updateTextField,
   clearTextField,
   setNumericField,
   incrementNumericField,
   setDateField,
   setBooleanField,
-  updatePlace,
-  clearPlace,
-  updateSelectedLocation,
-  clearSelectedLocation,
-  updateMapBounds,
-  clearMapBounds,
-  checkRecalculateMarkersButtonDisplayState,
-  hideRecalculateMarkersButton,
   setArrayField,
   clearArrayField,
+  setObjectField,
+  clearObjectField,
   setErrors,
   clearErrors,
 };

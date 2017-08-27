@@ -12,8 +12,8 @@ import InstallersApiServer from './api.js';
 Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
   // console.log('Installers.methods.addInstaller', newInstaller);
   check(newInstaller, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,

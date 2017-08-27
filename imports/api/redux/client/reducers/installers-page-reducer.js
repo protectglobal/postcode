@@ -3,6 +3,7 @@ import {
   numericFieldReducer,
   booleanFieldReducer,
   arrayFieldReducer,
+  objectFieldReducer,
   errorsReducer,
 } from './shared-reducers.js';
 
@@ -14,10 +15,9 @@ import {
 // Page reducer. Holds state for the whole page component. Delegates to smaller
 // reducers as needed.
 const initInstallersPageState = {
-  _id: '',
-  logo: '',
-  imageId: '', // image id associated to uploaded logo
+  _id: '', // installer id, required for edit
   companyName: '',
+  logo: {}, // cloudinary data
   addressOne: '',
   addressTwo: '',
   postalCode: '',
@@ -34,8 +34,8 @@ const initInstallersPageState = {
   canDelete: true,
   pageNumber: 1,
   errors: {
-    logo: [],
     companyName: [],
+    logo: [],
     addressOne: [],
     addressTwo: [],
     postalCode: [],
@@ -55,8 +55,6 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
     const { fieldName } = action;
     switch (fieldName) {
       case '_id':
-      case 'logo':
-      case 'imageId':
       case 'companyName':
       case 'addressOne':
       case 'addressTwo':
@@ -78,6 +76,11 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
         return {
           ...state,
           [fieldName]: booleanFieldReducer(state[fieldName], action),
+        };
+      case 'logo':
+        return {
+          ...state,
+          [fieldName]: objectFieldReducer(state[fieldName], action),
         };
       case 'pageNumber':
         return {

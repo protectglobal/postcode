@@ -12,7 +12,6 @@ import ModalForm from './modal-form';
 import Actions from '../../../api/redux/client/actions';
 import AuxFunctions from '../../../api/aux-functions';
 import Installers from '../../../api/installers/namespace';
-import Images from '../../../api/images/namespace';
 
 //------------------------------------------------------------------------------
 // PAGE COMPONENT DEFINITION:
@@ -76,7 +75,7 @@ class AddInstallerModal extends Component {
     reduxActions.dispatchSetBooleanField('uploadingImage', true);
 
     // Check for errors (number of images, file size and format)
-    const errors = Images.apiBoth.checkImages(files, 'logo', 1);
+    const errors = Installers.apiBoth.checkLogo(files);
 
     // In case of errors, warn user and prevent the meteor method to be called
     if (AuxFunctions.hasErrors(errors)) {
@@ -93,7 +92,7 @@ class AddInstallerModal extends Component {
 
     console.log('upload to cloudinary');
 
-    // TODO: shouldn't we use _.each file?
+    // At this stage files must contain a single image
     Cloudinary.upload(files, (err1, res1) => {
       console.log(err1, res1);
       if (err1) {
@@ -102,16 +101,11 @@ class AddInstallerModal extends Component {
         reduxActions.dispatchSetBooleanField('uploadingImage', false);
       } else {
         console.log('[uploader] success');
-        // Save image into DB
-        const { public_id, url, secure_url, width, height } = res1;
-        const newImage = {
-          publicId: public_id,
-          url,
-          secureUrl: secure_url,
-          width,
-          height,
-        };
-
+        // Filter and format cloudinary data
+        const logo = AuxFunctions.formatCloudinaryData(res1);
+        // Save image data into redux state
+        reduxActions.dispatchSetObjectField('logo', logo);
+        /*
         Meteor.call('Images.methodsServer.saveImage', newImage, (err2, res2) => {
           if (err2) {
             Bert.alert(err2.reason, 'danger', 'growl-top-right');
@@ -124,14 +118,18 @@ class AddInstallerModal extends Component {
           reduxActions.dispatchSetBooleanField('uploadingImage', false);
           // Re-enable upload button
           reduxActions.dispatchSetBooleanField('canUpload', true);
-        });
+        }); */
       }
+      // Remove loading indicator from UI
+      reduxActions.dispatchSetBooleanField('uploadingImage', false);
+      // Re-enable upload button
+      reduxActions.dispatchSetBooleanField('canUpload', true);
     });
   }
 
   handleImageDeleteButtonClick(publicId) {
     // Delete image from DB
-    Meteor.call('Images.methods.removeImage', publicId, (err1) => {
+    /* Meteor.call('Images.methods.removeImage', publicId, (err1) => {
       if (err1) {
         Bert.alert(err1.reason, 'danger', 'growl-top-right');
       } else {
@@ -144,7 +142,7 @@ class AddInstallerModal extends Component {
           }
         });
       }
-    });
+    }); */
   }
 
   handleAddInstallerSubmit() {
@@ -152,8 +150,8 @@ class AddInstallerModal extends Component {
 
     // List the fields that we are going to use.
     const fields = [
-      'logo',
       'companyName',
+      'logo',
       'addressOne',
       'addressTwo',
       'postalCode',
@@ -243,8 +241,17 @@ AddInstallerModal.propTypes = {
   reduxState: PropTypes.shape({
     canAdd: PropTypes.bool.isRequired,
     addInstallerModalVisible: PropTypes.bool.isRequired,
-    logo: PropTypes.string.isRequired,
     companyName: PropTypes.string.isRequired,
+    logo: PropTypes.shape({
+      publicId: PropTypes.string.isRequired,
+      resourceType: PropTypes.string.isRequired,
+      format: PropTypes.string.isRequired,
+      bytes: PropTypes.number.isRequired,
+      height: PropTypes.number.isRequired,
+      width: PropTypes.number.isRequired,
+      url: PropTypes.string.isRequired,
+      secureUrl: PropTypes.string.isRequired,
+    }),
     addressOne: PropTypes.string.isRequired,
     addressTwo: PropTypes.string.isRequired,
     postalCode: PropTypes.string.isRequired,
@@ -253,8 +260,8 @@ AddInstallerModal.propTypes = {
     email: PropTypes.string.isRequired,
     postalAreas: PropTypes.array.isRequired,
     errors: PropTypes.shape({
-      logo: PropTypes.array.isRequired,
       companyName: PropTypes.array.isRequired,
+      logo: PropTypes.array.isRequired,
       addressOne: PropTypes.array.isRequired,
       addressTwo: PropTypes.array.isRequired,
       postalCode: PropTypes.array.isRequired,
@@ -294,6 +301,12 @@ function mapDispatchToProps(dispatch) {
     },
     dispatchClearArrayField(fieldName) {
       return dispatch(Actions.clearArrayField(namespace, fieldName));
+    },
+    dispatchSetObjectField(fieldName, value) {
+      return dispatch(Actions.setObjectField(namespace, fieldName, value));
+    },
+    dispatchClearObjectField(fieldName) {
+      return dispatch(Actions.clearObjectField(namespace, fieldName));
     },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));

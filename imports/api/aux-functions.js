@@ -9,20 +9,81 @@ import _ from 'underscore';
 const AuxFunctions = {};
 
 //------------------------------------------------------------------------------
-AuxFunctions.checkImageSize = (file) => {
-  // console.log('AuxFunctions.checkImageSize', file);
-  return file && file.size && file.size <= 4 * 1000000; // 4 MB
+/**
+* @summary Format cloudinary raw data.
+* @param {object} - data. Data retrieved by Cloudinary.
+*/
+AuxFunctions.formatCloudinaryData = (data) => {
+  check(data, {
+    public_id: String,
+    resource_type: String,
+    format: String,
+    bytes: Number,
+    height: Number,
+    width: Number,
+    url: String,
+    secure_url: String,
+    created_at: String,
+    etag: String,
+    tags: [String],
+    type: String,
+    signature: String,
+    version: Number,
+  });
+
+  // Destructure
+  const {
+    public_id,
+    resource_type,
+    format,
+    bytes,
+    height,
+    width,
+    url,
+    secure_url,
+  } = data;
+
+  // Filter and format data into camelCase
+  return {
+    publicId: public_id,
+    resourceType: resource_type,
+    format,
+    bytes,
+    height,
+    width,
+    url,
+    secureUrl: secure_url,
+  };
 };
 //------------------------------------------------------------------------------
-AuxFunctions.checkImageFormat = (file) => {
-  // console.log('AuxFunctions.checkImageFormat', file);
+/**
+* @summary Check that file size is less or equal than the provided one.
+* @param {file} - file. File for which we want to check format.
+* @param {number} - size. Size in bytes.
+*/
+AuxFunctions.checkFileSize = (file, size) => {
+  check(size, Number);
+
+  // console.log('AuxFunctions.checkFileSize', file);
+  return file && file.size && file.size <= size;
+};
+//------------------------------------------------------------------------------
+/**
+* @summary Check that file has one of the given formats.
+* @param {file} - file. File for which we want to check format.
+* @param {[string]} - formats. Array containg the allowed formats.
+*/
+AuxFunctions.checkFileFormat = (file, formats) => {
+  check(formats, [String]);
+
+  // console.log('AuxFunctions.checkFileFormat', file);
   // Checks
   if (!file || !file.type) {
     return false;
   }
 
   const tokens = file.type.split('/');
-  return tokens[0] === 'image';
+  return formats.indexOf(tokens[0]) !== -1;
 };
 //------------------------------------------------------------------------------
 /**
