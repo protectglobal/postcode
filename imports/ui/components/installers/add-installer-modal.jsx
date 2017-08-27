@@ -6,7 +6,6 @@ import 'antd/lib/modal/style/css'; // for css
 import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
 import _ from 'underscore';
-import { Cloudinary } from 'meteor/lepozepo:cloudinary';
 import { Bert } from 'meteor/themeteorchef:bert';
 import ModalForm from './modal-form';
 import Actions from '../../../api/redux/client/actions';
@@ -26,9 +25,6 @@ class AddInstallerModal extends Component {
     super(props);
     this.handleAddInstallerButtonClick = this.handleAddInstallerButtonClick.bind(this);
     this.handleAddInstallerModalCancel = this.handleAddInstallerModalCancel.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleImageUpload = this.handleImageUpload.bind(this);
-    this.handleImageDeleteButtonClick = this.handleImageDeleteButtonClick.bind(this);
     this.handleAddInstallerSubmit = this.handleAddInstallerSubmit.bind(this);
   }
 
@@ -44,105 +40,6 @@ class AddInstallerModal extends Component {
     reduxActions.dispatchSetInitialState();
     // Close modal
     reduxActions.dispatchSetBooleanField('addInstallerModalVisible', false);
-  }
-
-  handleInputChange({ fieldName, value }) { // { fieldName: 'companyName', value: 'Protect Global' }
-    const { reduxState, reduxActions } = this.props;
-    const { errors } = reduxState;
-
-    if (fieldName !== 'postalAreas') {
-      reduxActions.dispatchUpdateTextField(fieldName, value);
-    } else {
-      reduxActions.dispatchSetArrayField(fieldName, value);
-    }
-
-    // Clear errors if any
-    if (errors[fieldName].length > 0) {
-      reduxActions.dispatchClearErrors(fieldName);
-    }
-  }
-
-  handleImageUpload(files) {
-    const { reduxActions } = this.props;
-    console.log('handleUpload');
-    // Clear errors if any
-    reduxActions.dispatchClearErrors('logo');
-
-    // Disable upload button
-    reduxActions.dispatchSetBooleanField('canUpload', false);
-
-    // Show loading indicator
-    reduxActions.dispatchSetBooleanField('uploadingImage', true);
-
-    // Check for errors (number of images, file size and format)
-    const errors = Installers.apiBoth.checkLogo(files);
-
-    // In case of errors, warn user and prevent the meteor method to be called
-    if (AuxFunctions.hasErrors(errors)) {
-      // Display errors on UI
-      reduxActions.dispatchSetErrors(errors);
-      // Display flash notification
-      Bert.alert('The form has errors', 'danger', 'growl-top-right');
-      // Hide loading indicator
-      reduxActions.dispatchSetBooleanField('uploadingImage', false);
-      // Re-enable upload button
-      reduxActions.dispatchSetBooleanField('canUpload', true);
-      return;
-    }
-
-    console.log('upload to cloudinary');
-
-    // At this stage files must contain a single image
-    Cloudinary.upload(files, (err1, res1) => {
-      console.log(err1, res1);
-      if (err1) {
-        Bert.alert(err1.reason, 'danger', 'growl-top-right');
-        // Remove loading indicator from UI
-        reduxActions.dispatchSetBooleanField('uploadingImage', false);
-      } else {
-        console.log('[uploader] success');
-        // Filter and format cloudinary data
-        const logo = AuxFunctions.formatCloudinaryData(res1);
-        // Save image data into redux state
-        reduxActions.dispatchSetObjectField('logo', logo);
-        /*
-        Meteor.call('Images.methodsServer.saveImage', newImage, (err2, res2) => {
-          if (err2) {
-            Bert.alert(err2.reason, 'danger', 'growl-top-right');
-          } else {
-            // Save imageId into redux store
-            reduxActions.dispatchUpdateTextField('imageId', res2.imageId);
-            // TODO: save imageId and/or secureUrl into installers collection
-          }
-          // Remove loading indicator from UI
-          reduxActions.dispatchSetBooleanField('uploadingImage', false);
-          // Re-enable upload button
-          reduxActions.dispatchSetBooleanField('canUpload', true);
-        }); */
-      }
-      // Remove loading indicator from UI
-      reduxActions.dispatchSetBooleanField('uploadingImage', false);
-      // Re-enable upload button
-      reduxActions.dispatchSetBooleanField('canUpload', true);
-    });
-  }
-
-  handleImageDeleteButtonClick(publicId) {
-    // Delete image from DB
-    /* Meteor.call('Images.methods.removeImage', publicId, (err1) => {
-      if (err1) {
-        Bert.alert(err1.reason, 'danger', 'growl-top-right');
-      } else {
-        // Delete image from Cloudinary server
-        Cloudinary.delete(publicId, (err2) => {
-          if (err2) {
-            Bert.alert(err2.reason, 'danger', 'growl-top-right');
-          } else {
-            console.log('[image] deleted');
-          }
-        });
-      }
-    }); */
   }
 
   handleAddInstallerSubmit() {
@@ -225,10 +122,6 @@ class AddInstallerModal extends Component {
           onCancel={this.handleAddInstallerModalCancel}
         >
           <ModalForm
-            reduxState={reduxState}
-            handleInputChange={this.handleInputChange}
-            handleImageUpload={this.handleImageUpload}
-            handleImageDeleteButtonClick={this.handleImageDeleteButtonClick}
             handleSubmit={this.handleAddInstallerSubmit}
           />
         </Modal>

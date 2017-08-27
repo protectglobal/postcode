@@ -41,10 +41,12 @@ class InstallersPage extends Component {
     // the form rendered inside the edit installer modal
     const keys = _.keys(installer);
     _.each(keys, (key) => {
-      if (key !== 'postalAreas') {
-        reduxActions.dispatchUpdateTextField(key, installer[key]);
-      } else {
+      if (key === 'postalAreas') {
         reduxActions.dispatchSetArrayField(key, installer[key]);
+      } else if (key === 'logo') {
+        reduxActions.dispatchSetObjectField(key, installer[key]);
+      } else {
+        reduxActions.dispatchUpdateTextField(key, installer[key]);
       }
     });
 
@@ -115,6 +117,12 @@ function mapDispatchToProps(dispatch) {
     },
     dispatchClearArrayField(fieldName) {
       return dispatch(Actions.clearArrayField(namespace, fieldName));
+    },
+    dispatchSetObjectField(fieldName, value) {
+      return dispatch(Actions.setObjectField(namespace, fieldName, value));
+    },
+    dispatchClearObjectField(fieldName) {
+      return dispatch(Actions.clearObjectField(namespace, fieldName));
     },
     dispatchSetErrors(errorsObj) {
       return dispatch(Actions.setErrors(namespace, errorsObj));

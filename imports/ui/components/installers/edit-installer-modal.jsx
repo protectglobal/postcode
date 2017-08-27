@@ -22,7 +22,6 @@ class EditInstallerModal extends Component {
   constructor(props) {
     super(props);
     this.handleEditInstallerModalCancel = this.handleEditInstallerModalCancel.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleEditInstallerSubmit = this.handleEditInstallerSubmit.bind(this);
   }
 
@@ -34,29 +33,13 @@ class EditInstallerModal extends Component {
     reduxActions.dispatchSetBooleanField('editInstallerModalVisible', false);
   }
 
-  handleInputChange({ fieldName, value }) { // { fieldName: 'companyName', value: 'Portect Global' }
-    const { reduxState, reduxActions } = this.props;
-    const { errors } = reduxState;
-
-    if (fieldName !== 'postalAreas') {
-      reduxActions.dispatchUpdateTextField(fieldName, value);
-    } else {
-      reduxActions.dispatchSetArrayField(fieldName, value);
-    }
-
-    // Clear errors if any
-    if (errors[fieldName].length > 0) {
-      reduxActions.dispatchClearErrors(fieldName);
-    }
-  }
-
   handleEditInstallerSubmit() {
     const { reduxState, reduxActions } = this.props;
 
     // List the fields that we are going to use.
     const fields = [
-      'logo',
       'companyName',
+      'logo',
       'addressOne',
       'addressTwo',
       'postalCode',
@@ -123,8 +106,6 @@ class EditInstallerModal extends Component {
         onCancel={this.handleEditInstallerModalCancel}
       >
         <ModalForm
-          reduxState={reduxState}
-          handleInputChange={this.handleInputChange}
           handleSubmit={this.handleEditInstallerSubmit}
         />
       </Modal>

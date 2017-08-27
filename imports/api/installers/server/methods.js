@@ -55,8 +55,8 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
   // console.log('Installers.methods.editInstaller', installerId, installer);
   check(installerId, String);
   check(installer, {
-    logo: String,
     companyName: String,
+    logo: Object,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
