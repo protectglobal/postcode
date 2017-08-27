@@ -1,8 +1,9 @@
-// import { Meteor } from 'meteor/meteor';
+import { Meteor } from 'meteor/meteor';
 import { Restivus } from 'meteor/nimble:restivus';
 import { EJSON } from 'meteor/ejson';
 // import _ from 'underscore';
 import Customers from '../../api/customers/namespace.js';
+import Installers from '../../api/installers/namespace.js';
 
 //------------------------------------------------------------------------------
 // CONFIGURE FIRST VERSION OF THE API:
@@ -151,17 +152,6 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
       // Destructure
       const { name, postalCode, phoneNumber, email } = this.bodyParams;
 
-      // Check required fields
-      /* if (!name || !postalCode || !phoneNumber || !email) {
-        return {
-          statusCode: 404,
-          body: {
-            status: 'fail',
-            message: `Please, specify name, postalCode, phoneNumber and email fields. Received data --> name: ${name}, postalCode: ${postalCode}, phoneNumber: ${phoneNumber} and email: ${email}`,
-          },
-        };
-      } */
-
       // Ensure string
       const newCustomer = {
         name: (name && String(name)) || '',
@@ -171,25 +161,51 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
       };
 
       // Insert customer
-      const { err, customerId } = Customers.apiServer.insertCustomer(newCustomer);
+      const { err: err1, customer } = Customers.apiServer.insertCustomer(newCustomer);
 
       // Handle error
-      if (err) {
+      if (err1) {
         return {
           statusCode: 404,
           body: {
             status: 'fail',
-            message: err.reason,
+            message: err1.reason,
           },
         };
       }
+
+      const { err: err2, installer } = Installers.apiServer.getAssignee(customer.postalcode);
+
+      // Handle error
+      if (err2) {
+        return {
+          statusCode: 404,
+          body: {
+            status: 'fail',
+            message: err2.reason,
+          },
+        };
+      }
+
+      // Don't wait for the following task to be done before giving the client
+      // the green light to move ahead
+      Meteor.defer(() => {
+        // Save assigned installer into customer record
+        Customers.apiServer.setAssignedInstaller(customer._id, installer);
+
+        // Send email containing customer data to installer
+        const { deliveryStatus } = Installers.apiServer.sendEmail(installer._id, customer);
+
+        // Save email delivery status into customer record
+        Customers.apiServer.setEmailDeliveryStatus(customer._id, deliveryStatus);
+      });
 
       // Handle success
       return {
         statusCode: 200,
         body: {
           status: 'success',
-          message: `customerId: ${customerId}`,
+          message: `Assignee installer: ${EJSON.stringify(installer, { indent: true })}`,
         },
       };
     },

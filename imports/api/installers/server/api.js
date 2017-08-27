@@ -158,5 +158,44 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
   return { err: null };
 };
 //------------------------------------------------------------------------------
+/**
+* @summary Get assignee installer for the given postal code based on postal
+* areas. This function must be called from a trusted source (server) since we
+* are not validating the user credentials.
+* @param {string} - postalCode. Postal code.
+* @return {object} - installer. Installer serving the given postal code.
+*/
+InstallersApiServer.getAssignee = (postalCode) => {
+  // console.log('Installers.apiServer.getAssignee input:', postalCode);
+  check(postalCode, String);
+
+  // TODO: Get installer serving postal code
+  // (for now, just return a random document)
+  const pipeline = [
+    { $sample: { _id: { $exists: true } } },
+  ];
+  let installer = InstallersCollection.aggregate(pipeline);
+
+  // TODO: In case postal code doesn't match any postal areas, return default
+  // installer
+  if (!installer) {
+    installer = InstallersCollection.findOne({ isDefaultInstaller: true });
+
+    if (!installer) {
+      return {
+        err: {
+          reason: 'Default installer is not set!',
+        },
+        installer: null,
+      };
+    }
+  }
+
+  return {
+    err: null,
+    installer,
+  };
+};
+//------------------------------------------------------------------------------
 
 export default InstallersApiServer;

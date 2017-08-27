@@ -62,6 +62,27 @@ CustomersCollection.attachSchema(new SimpleSchema({
     regEx: SimpleSchema.RegEx.Email,
   },
 
+  installer: {
+    type: Object,
+    label: 'Installer assigned to this customer',
+    optional: true,
+  },
+
+  'installer.id': {
+    type: String,
+  },
+
+  'installer.companyName': {
+    type: String,
+  },
+
+  emailDeliveryStatus: {
+    type: String,
+    label: 'Status of the email sent to the assigned installer',
+    allowedValues: ['sent', 'failed'],
+    optional: true,
+  },
+
 }));
 
 export default CustomersCollection;
