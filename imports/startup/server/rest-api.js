@@ -21,14 +21,9 @@ const ApiV1 = new Restivus({
     const { hashed } = this.bodyParams;
 
     // Throw error, ie, don't return credentials if user didn't hash password
-    if (!hashed || hashed !== true) {
+    if (!hashed || (hashed !== true && hashed !== 'true')) {
       throw new Error('Please, hash your password');
     }
-
-    // Any returned data will be added to the response body as data.extra
-    return {
-      role: this.user.roles[0],
-    };
   },
 });
 
