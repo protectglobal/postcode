@@ -98,10 +98,13 @@ CustomersView.propTypes = {
         postalCode: PropTypes.string.isRequired,
         phoneNumber: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
-        installer: PropTypes.oneOf({}, {
-          id: PropTypes.string.isRequired,
-          name: PropTypes.string.isRequired,
-        }),
+        installer: PropTypes.oneOfType([
+          PropTypes.shape({}),
+          PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+          }),
+        ]),
         emailDeliveryStatus: PropTypes.oneOf(['', 'failed', 'sent']),
       }).isRequired,
     ).isRequired,
