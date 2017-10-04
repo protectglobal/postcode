@@ -41,9 +41,7 @@ class InstallersPage extends Component {
     // the form rendered inside the edit installer modal
     const keys = _.keys(installer);
     _.each(keys, (key) => {
-      if (key === 'postalAreas') {
-        reduxActions.dispatchSetArrayField(key, installer[key]);
-      } else if (key === 'logo') {
+      if (key === 'logo') {
         reduxActions.dispatchSetObjectField(key, installer[key]);
       } else {
         reduxActions.dispatchUpdateTextField(key, installer[key]);
@@ -219,7 +217,7 @@ const InstallersPageContainer = createContainer(() => {
       city: city || '',
       phoneNumber: phoneNumber || '',
       email: email || '',
-      postalAreas: postalAreas || [],
+      postalAreas: postalAreas.join('; ') || '',
     };
   });
 

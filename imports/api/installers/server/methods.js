@@ -20,7 +20,7 @@ Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
     city: String,
     phoneNumber: String,
     email: String,
-    postalAreas: [String],
+    postalAreas: String,
   });
 
   // Get current user.
@@ -63,7 +63,7 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
     city: String,
     phoneNumber: String,
     email: String,
-    postalAreas: [String],
+    postalAreas: String,
   });
 
   // Get current user.

@@ -2,7 +2,7 @@ import {
   textFieldReducer,
   numericFieldReducer,
   booleanFieldReducer,
-  arrayFieldReducer,
+  // arrayFieldReducer,
   objectFieldReducer,
   errorsReducer,
 } from './shared-reducers.js';
@@ -24,7 +24,7 @@ const initInstallersPageState = {
   city: '',
   phoneNumber: '',
   email: '',
-  postalAreas: [],
+  postalAreas: '',
   addInstallerModalVisible: false,
   editInstallerModalVisible: false,
   canAdd: true,
@@ -62,6 +62,7 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
       case 'city':
       case 'phoneNumber':
       case 'email':
+      case 'postalAreas':
         return {
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
@@ -87,11 +88,11 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
           ...state,
           [fieldName]: numericFieldReducer(state[fieldName], action),
         };
-      case 'postalAreas':
+      /* case 'postalAreas':
         return {
           ...state,
           [fieldName]: arrayFieldReducer(state[fieldName], action),
-        };
+        }; */
       case 'errors':
         return {
           ...state,

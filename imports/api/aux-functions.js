@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { check, Match } from 'meteor/check';
 import _ from 'underscore';
 // const parseDomain = require('parse-domain');
@@ -8,6 +7,19 @@ import _ from 'underscore';
 */
 const AuxFunctions = {};
 
+//------------------------------------------------------------------------------
+/**
+* @summary Parse postalAreas, separate based on comma, space or semicolon.
+* @param {string} postalAreas - String of postal areas separated by comma, space
+* or semicolon.
+*/
+AuxFunctions.parsePostalAreas = (postalAreas) => {
+  check(postalAreas, String);
+
+  // console.log('AuxFunctions.checkFileSize', file);
+  // NOTE: with filter(Boolean) all falsy values will be omitted from the array.
+  return postalAreas.split(/[ ,;]+/).filter(Boolean);
+};
 //------------------------------------------------------------------------------
 /**
 * @summary Format cloudinary raw data.
