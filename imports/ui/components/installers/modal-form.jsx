@@ -11,7 +11,7 @@ import 'antd/lib/icon/style/css'; // for css
 import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css */
 import InputControlled from '../../components/forms/input-controlled';
-import TagsSelectControlled from '../../components/forms/tags-select-controlled';
+// import TagsSelectControlled from '../../components/forms/tags-select-controlled';
 import Actions from '../../../api/redux/client/actions';
 import AuxFunctions from '../../../api/aux-functions';
 import Installers from '../../../api/installers/namespace';
@@ -39,11 +39,7 @@ class ModalForm extends Component {
     const { reduxState, reduxActions } = this.props;
     const { errors } = reduxState;
 
-    if (fieldName !== 'postalAreas') {
-      reduxActions.dispatchUpdateTextField(fieldName, value);
-    } else {
-      reduxActions.dispatchSetArrayField(fieldName, value);
-    }
+    reduxActions.dispatchUpdateTextField(fieldName, value);
 
     // Clear errors if any
     if (errors[fieldName].length > 0) {
@@ -269,14 +265,12 @@ class ModalForm extends Component {
           validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'postalAreas') && 'error') || ''}
           help={AuxFunctions.getFieldNameErrors(errors, 'postalAreas')}
         >
-          <TagsSelectControlled
+          <InputControlled
+            type="text"
             id="postalAreas"
             placeholder="Postal areas"
-            options={[]}
-            defaultValue={postalAreas}
+            value={postalAreas}
             onChange={this.handleInputChange}
-            onSearch={() => {}}
-            dropdownStyle={{ display: 'none' }}
           />
         </FormItem>
       </Form>
@@ -296,7 +290,7 @@ ModalForm.propTypes = {
     city: PropTypes.string.isRequired,
     phoneNumber: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    postalAreas: PropTypes.array.isRequired,
+    postalAreas: PropTypes.string.isRequired,
     errors: PropTypes.shape({
       companyName: PropTypes.array.isRequired,
       logo: PropTypes.array.isRequired,

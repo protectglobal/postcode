@@ -9,9 +9,10 @@ import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
 import Popconfirm from 'antd/lib/popconfirm'; // for js
 import 'antd/lib/popconfirm/style/css'; // for css
-import Constants from '../../../api/constants';
+// import Constants from '../../../api/constants';
+import AuxFunctions from '../../../api/aux-functions';
 import DefaultLayout from '../../layouts/default/default-layout';
-import SelectControlled from '../../components/forms/select-controlled';
+// import SelectControlled from '../../components/forms/select-controlled';
 import AddInstallerModal from '../../components/installers/add-installer-modal';
 import EditInstallerModal from '../../components/installers/edit-installer-modal';
 import style from './style.scss';
@@ -87,7 +88,8 @@ const InstallersView = (props) => {
       width: '200px',
       render: (text, record) => {
         const areas = [];
-        _.each(record.postalAreas, (pa) => {
+        const postalAreasArray = AuxFunctions.parsePostalAreas(record.postalAreas);
+        _.each(postalAreasArray, (pa) => {
           areas.push(<Tag color="pink" key={pa}>{pa}</Tag>);
         });
         return (
@@ -179,7 +181,7 @@ InstallersView.propTypes = {
         city: PropTypes.string.isRequired,
         phoneNumber: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
-        postalAreas: PropTypes.array.isRequired,
+        postalAreas: PropTypes.string.isRequired,
       }).isRequired,
     ).isRequired,
   }).isRequired,

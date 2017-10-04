@@ -31,7 +31,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
     city: String,
     phoneNumber: String,
     email: String,
-    postalAreas: [String],
+    postalAreas: String,
   });
 
   // Check for errors
@@ -49,6 +49,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   const doc = Object.assign(
     {},
     newInstaller,
+    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas) },
     { createdAt: new Date(), createdBy: curUserId },
   );
 
@@ -94,7 +95,7 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
     city: String,
     phoneNumber: String,
     email: String,
-    postalAreas: [String],
+    postalAreas: String,
   });
 
   // Check for errors
@@ -112,6 +113,7 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   const doc = Object.assign(
     {},
     installer,
+    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas) },
     { updatedAt: new Date(), updatedBy: curUserId },
   );
 

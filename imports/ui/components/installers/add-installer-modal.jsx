@@ -154,7 +154,7 @@ AddInstallerModal.propTypes = {
     city: PropTypes.string.isRequired,
     phoneNumber: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
-    postalAreas: PropTypes.array.isRequired,
+    postalAreas: PropTypes.string.isRequired,
     errors: PropTypes.shape({
       companyName: PropTypes.array.isRequired,
       logo: PropTypes.array.isRequired,

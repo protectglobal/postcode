@@ -63,7 +63,7 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
     city: String,
     phoneNumber: String,
     email: String,
-    postalAreas: [String],
+    postalAreas: String,
   });
 
   // Destructure
@@ -123,7 +123,10 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
     errors.email.push('Email is invalid');
   }
 
-  if (!postalAreas || postalAreas.length === 0) {
+  if (!postalAreas || postalAreas.trim().length === 0) {
+    errors.postalAreas.push('Postal Areas is required');
+  }
+  /* if (!postalAreas || postalAreas.length === 0) {
     errors.postalAreas.push('Postal Areas is required');
   } else {
     _.each(postalAreas, (pc) => {
@@ -131,7 +134,7 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
         errors.postalAreas.push('At least one of the Postal Codes is invalid');
       } // TODO: alphanumeric
     });
-  }
+  } */
 
   return errors;
 };
