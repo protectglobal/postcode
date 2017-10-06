@@ -31,5 +31,9 @@
   "cloudinary": {
     "apiKey": "488285919113964",
     "apiSecret": "ftqQ5Ed7yUh978sCLL5Y5P-bmko"
+  },
+  "testMode": {
+    "isTest": true,
+    "testEmail": "federodes@gmail.com"
   }
 }
