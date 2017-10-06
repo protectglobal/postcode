@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { check, Match } from 'meteor/check';
 import { Email } from 'meteor/email';
@@ -229,10 +230,17 @@ InstallersApiServer.sendEmail = (installerId, customer) => {
     };
   }
 
-  // Delete document
+  // In case we are in testMode, deliver emails to the given testEmail address
+  const { isTest, testEmail } = Meteor.settings.testMode;
+  console.log(
+    'isTest', isTest,
+    'testEmail', testEmail,
+  );
+
+  // Send email
   try {
     Email.send({
-      to: installer.email,
+      to: !isTest ? installer.email : testEmail,
       from: `no-reply@${Constants.DOMAIN_NAME}`,
       subject: 'Customer\'s installation request',
       text: `
