@@ -16,7 +16,7 @@ const CustomersApiServer = {};
 * @return {object} - customer.
 */
 CustomersApiServer.insertCustomer = (newCustomer) => {
-  console.log('Customers.apiServer.insertCustomer input:', newCustomer);
+  // console.log('Customers.apiServer.insertCustomer input:', newCustomer);
   check(newCustomer, {
     name: String,
     postalCode: String,
@@ -67,7 +67,7 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
 * @return {object} - installer.
 */
 CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
-  console.log('Customers.apiServer.setAssignedInstaller input:', customerId, installer);
+  console.log('\nCustomers.apiServer.setAssignedInstaller:', customerId, installer);
   check(customerId, String);
   check(installer, {
     _id: String,
@@ -75,6 +75,7 @@ CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
     createdBy: String,
     companyName: String,
     logo: Object,
+    isFallbackInstaller: Match.Maybe(Boolean),
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,

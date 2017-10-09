@@ -35,7 +35,7 @@ class SelectControlled extends Component {
     return (
       <div id={id}>
         <Select
-          value={value || undefined}
+          value={value}
           showSearch
           onChange={this.handleChange}
           {...other}
@@ -49,9 +49,21 @@ class SelectControlled extends Component {
 
 SelectControlled.propTypes = {
   id: PropTypes.string.isRequired,
-  value: PropTypes.any,
-  options: PropTypes.array.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  options: PropTypes.arrayOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.number,
+    ]),
+  ).isRequired,
   onChange: PropTypes.func.isRequired,
+};
+
+SelectControlled.defaultProps = {
+  value: undefined,
 };
 
 export default SelectControlled;

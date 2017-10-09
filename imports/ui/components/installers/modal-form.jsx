@@ -4,14 +4,7 @@ import { Cloudinary } from 'meteor/lepozepo:cloudinary';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Form from 'antd/lib/form'; // for js
 import 'antd/lib/form/style/css'; // for css
-/* import Upload from 'antd/lib/upload'; // for js
-import 'antd/lib/upload/style/css'; // for css
-import Icon from 'antd/lib/icon'; // for js
-import 'antd/lib/icon/style/css'; // for css
-import Button from 'antd/lib/button'; // for js
-import 'antd/lib/button/style/css'; // for css */
 import InputControlled from '../../components/forms/input-controlled';
-// import TagsSelectControlled from '../../components/forms/tags-select-controlled';
 import Actions from '../../../api/redux/client/actions';
 import AuxFunctions from '../../../api/aux-functions';
 import Installers from '../../../api/installers/namespace';

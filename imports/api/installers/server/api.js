@@ -50,7 +50,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   const doc = Object.assign(
     {},
     newInstaller,
-    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas) },
+    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas).map(pa => pa.toUpperCase()) },
     { createdAt: new Date(), createdBy: curUserId },
   );
 
@@ -114,7 +114,7 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   const doc = Object.assign(
     {},
     installer,
-    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas) },
+    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas).map(pa => pa.toUpperCase()) },
     { updatedAt: new Date(), updatedBy: curUserId },
   );
 
@@ -164,6 +164,35 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
 };
 //------------------------------------------------------------------------------
 /**
+* @summary Set assignee installer value. This function must be called from a
+* trusted source (server) since we are not validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to change assignee
+* value.
+* @param {bool} - value. Assignee value (true or false).
+*/
+InstallersApiServer.setFallbackValue = (curUserId, installerId, value) => {
+  // console.log('Installers.apiServer.setFallbackValue input:', curUserId, installerId, value);
+  check(curUserId, String);
+  check(installerId, String);
+  check(value, Boolean);
+
+  // Delete document
+  try {
+    InstallersCollection.update({ _id: installerId }, { $set: { isFallbackInstaller: value } });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      err: {
+        reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
+      },
+    };
+  }
+
+  return { err: null };
+};
+//------------------------------------------------------------------------------
+/**
 * @summary Get assignee installer for the given postal code based on postal
 * areas. This function must be called from a trusted source (server) since we
 * are not validating the user credentials.
@@ -171,29 +200,46 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
 * @return {object} - installer. Installer serving the given postal code.
 */
 InstallersApiServer.getAssignee = (postalCode) => {
-  console.log('Installers.apiServer.getAssignee input:', postalCode);
+  console.log('\nInstallers.apiServer.getAssignee:', postalCode);
   check(postalCode, String);
 
-  // TODO: Get installer serving postal code
-  // (for now, just return a random document)
-  const pipeline = [
-    { $sample: { size: 1 } },
-  ];
-  let installer = InstallersCollection.aggregate(pipeline)[0];
+  // Process postal code to remove all spaces.
+  const cleanPC = postalCode.trim().replace(' ', '').toUpperCase();
+  console.log('cleanPC', cleanPC);
 
-  // TODO: In case postal code doesn't match any postal areas, return default
-  // installer
-  if (!installer) {
-    installer = InstallersCollection.findOne({ isDefaultInstaller: true });
+  const MAX_CHARS = 6;
+  let stopCond = false;
 
-    if (!installer) {
-      return {
-        err: {
-          reason: 'Default installer is not set!',
-        },
-        installer: null,
+  // Look for installers matching the first MAX_CHARS or less chars of the
+  // given postal code
+  for (let numChars = MAX_CHARS; numChars > 0 && !stopCond; numChars -= 1) {
+    if (cleanPC.length >= numChars) {
+      const selector = {
+        // Match the first numChars (exact match)
+        postalAreas: cleanPC.slice(0, numChars),
       };
+      const installer = InstallersCollection.findOne(selector);
+      console.log('installer: ', installer);
+      if (installer) {
+        stopCond = true;
+        return {
+          err: null,
+          installer,
+        };
+      }
     }
+  }
+
+  // In case no installer was found, return fallback.
+  const installer = InstallersCollection.findOne({ isFallbackInstaller: true });
+
+  if (!installer) {
+    return {
+      err: {
+        reason: 'Default installer is not set!',
+      },
+      installer: null,
+    };
   }
 
   return {
@@ -210,7 +256,7 @@ InstallersApiServer.getAssignee = (postalCode) => {
 * @param {string} - installerId. Id of the installer we want to delete.
 */
 InstallersApiServer.sendEmail = (installerId, customer) => {
-  console.log('Installers.apiServer.sendEmail input:', installerId, installerId);
+  // console.log('Installers.apiServer.sendEmail input:', installerId, customer);
   check(installerId, String);
   check(customer, {
     _id: String,
@@ -231,16 +277,23 @@ InstallersApiServer.sendEmail = (installerId, customer) => {
   }
 
   // In case we are in testMode, deliver emails to the given testEmail address
-  const { isTest, testEmail } = Meteor.settings.testMode;
-  console.log(
+  const { isTest, testEmail, exceptions } = Meteor.settings.testMode;
+  /* console.log(
     'isTest', isTest,
     'testEmail', testEmail,
-  );
+    'exceptions', exceptions,
+    'exceptions.indexOf(installer.email)', exceptions.indexOf(installer.email),
+  ); */
+
+  // Resolve delivery email
+  const emailTo = (!isTest || exceptions.indexOf(installer.email) !== -1)
+    ? installer.email
+    : testEmail;
 
   // Send email
   try {
     Email.send({
-      to: !isTest ? installer.email : testEmail,
+      to: emailTo,
       from: `no-reply@${Constants.DOMAIN_NAME}`,
       subject: 'Customer\'s installation request',
       text: `

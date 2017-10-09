@@ -14,7 +14,7 @@ const CustomersApiBoth = {};
 * @return {object} - errors.
 */
 CustomersApiBoth.checkNewCustomerFields = (newCustomer) => {
-  console.log('Customers.apiBoth.checkNewCustomerFields input:', newCustomer);
+  // console.log('Customers.apiBoth.checkNewCustomerFields input:', newCustomer);
   check(newCustomer, {
     name: String,
     postalCode: String,

@@ -117,6 +117,7 @@ EditInstallerModal.propTypes = {
   reduxState: PropTypes.shape({
     canEdit: PropTypes.bool.isRequired,
     editInstallerModalVisible: PropTypes.bool.isRequired,
+    companyName: PropTypes.string.isRequired,
     _id: PropTypes.string.isRequired,
     logo: PropTypes.oneOfType([
       PropTypes.shape({}),
@@ -131,7 +132,6 @@ EditInstallerModal.propTypes = {
         secureUrl: PropTypes.string.isRequired,
       }),
     ]),
-    companyName: PropTypes.string.isRequired,
     addressOne: PropTypes.string.isRequired,
     addressTwo: PropTypes.string.isRequired,
     postalCode: PropTypes.string.isRequired,
@@ -140,8 +140,8 @@ EditInstallerModal.propTypes = {
     email: PropTypes.string.isRequired,
     postalAreas: PropTypes.string.isRequired,
     errors: PropTypes.shape({
-      logo: PropTypes.array.isRequired,
       companyName: PropTypes.array.isRequired,
+      logo: PropTypes.array.isRequired,
       addressOne: PropTypes.array.isRequired,
       addressTwo: PropTypes.array.isRequired,
       postalCode: PropTypes.array.isRequired,

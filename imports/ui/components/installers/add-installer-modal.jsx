@@ -105,7 +105,7 @@ class AddInstallerModal extends Component {
     const { canAdd, addInstallerModalVisible } = reduxState;
 
     return (
-      <div>
+      <div className="inline-block mr2">
         <Button
           type="primary"
           onClick={this.handleAddInstallerButtonClick}
