@@ -231,16 +231,23 @@ InstallersApiServer.sendEmail = (installerId, customer) => {
   }
 
   // In case we are in testMode, deliver emails to the given testEmail address
-  const { isTest, testEmail } = Meteor.settings.testMode;
+  const { isTest, testEmail, exceptions } = Meteor.settings.testMode;
   console.log(
     'isTest', isTest,
     'testEmail', testEmail,
+    'exceptions', exceptions,
+    'exceptions.indexOf(installer.email)', exceptions.indexOf(installer.email),
   );
+
+  // Resolve delivery email
+  const emailTo = (!isTest || exceptions.indexOf(installer.email) !== -1)
+    ? installer.email
+    : testEmail;
 
   // Send email
   try {
     Email.send({
-      to: !isTest ? installer.email : testEmail,
+      to: emailTo,
       from: `no-reply@${Constants.DOMAIN_NAME}`,
       subject: 'Customer\'s installation request',
       text: `

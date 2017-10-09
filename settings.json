@@ -34,6 +34,9 @@
   },
   "testMode": {
     "isTest": true,
-    "testEmail": "federodes@gmail.com"
+    "testEmail": "federodes@gmail.com",
+    "exceptions": [
+      "protect@parogroup.co.uk"
+    ]
   }
 }
