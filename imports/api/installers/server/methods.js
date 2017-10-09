@@ -130,7 +130,7 @@ Meteor.methods({ 'Installers.methods.removeInstaller'(installerId) {
 * @summary Set fallback installer value.
 */
 Meteor.methods({ 'Installers.methods.setFallbackValue'(installerId, value) {
-  console.log('Installers.methods.setFallbackValue', installerId, value);
+  // console.log('Installers.methods.setFallbackValue', installerId, value);
   check(installerId, String);
   check(value, Boolean);
 
@@ -165,6 +165,7 @@ Meteor.methods({ 'Installers.methods.setFallbackValue'(installerId, value) {
       // Bubble up error to client view
       throw new Error(500, err1.reason);
     }
+
     // Secondly, set the rest of the installer to NOT be the fallback.
     const errors = [];
     InstallersCollection.find({ _id: { $ne: installerId }, isFallbackInstaller: true }).forEach(({ _id }) => {
@@ -174,8 +175,7 @@ Meteor.methods({ 'Installers.methods.setFallbackValue'(installerId, value) {
       }
     });
     if (errors.length > 0) {
-      console.log('errors', errors);
-      // Bubble up first error for client to view
+      // Bubble up first error to client
       throw new Error(500, errors[0].reason);
     }
   }

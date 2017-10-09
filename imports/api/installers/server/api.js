@@ -172,7 +172,7 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
 * @param {bool} - value. Assignee value (true or false).
 */
 InstallersApiServer.setFallbackValue = (curUserId, installerId, value) => {
-  console.log('Installers.apiServer.setFallbackValue input:', curUserId, installerId, value);
+  // console.log('Installers.apiServer.setFallbackValue input:', curUserId, installerId, value);
   check(curUserId, String);
   check(installerId, String);
   check(value, Boolean);
@@ -200,7 +200,7 @@ InstallersApiServer.setFallbackValue = (curUserId, installerId, value) => {
 * @return {object} - installer. Installer serving the given postal code.
 */
 InstallersApiServer.getAssignee = (postalCode) => {
-  console.log('Installers.apiServer.getAssignee input:', postalCode);
+  // console.log('Installers.apiServer.getAssignee input:', postalCode);
   check(postalCode, String);
 
   // TODO: Get installer serving postal code
@@ -239,7 +239,7 @@ InstallersApiServer.getAssignee = (postalCode) => {
 * @param {string} - installerId. Id of the installer we want to delete.
 */
 InstallersApiServer.sendEmail = (installerId, customer) => {
-  console.log('Installers.apiServer.sendEmail input:', installerId, installerId);
+  // console.log('Installers.apiServer.sendEmail input:', installerId, customer);
   check(installerId, String);
   check(customer, {
     _id: String,

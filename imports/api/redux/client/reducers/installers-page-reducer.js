@@ -18,7 +18,6 @@ const initInstallersPageState = {
   _id: '', // installer id, required for edit
   companyName: '',
   logo: {}, // cloudinary data
-  // isFallbackInstaller: false,
   addressOne: '',
   addressTwo: '',
   postalCode: '',
@@ -37,7 +36,6 @@ const initInstallersPageState = {
   errors: {
     companyName: [],
     logo: [],
-    // isFallbackInstaller: [],
     addressOne: [],
     addressTwo: [],
     postalCode: [],
@@ -69,7 +67,6 @@ const installersPageReducer = (state = Object.assign({}, initInstallersPageState
           ...state,
           [fieldName]: textFieldReducer(state[fieldName], action),
         };
-      // case 'isFallbackInstaller':
       case 'addInstallerModalVisible':
       case 'editInstallerModalVisible':
       case 'canAdd':

@@ -30,10 +30,6 @@ class InstallersPage extends Component {
   }
 
   handleAsigneeInstallerChange({ installerId, value }) {
-    console.log(
-      'installerId', installerId,
-      'value', value,
-    );
     Meteor.call('Installers.methods.setFallbackValue', installerId, value, (err) => {
       if (err) {
         Bert.alert('The form has errors', 'danger', 'growl-top-right');

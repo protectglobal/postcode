@@ -49,15 +49,15 @@ class SelectControlled extends Component {
 
 SelectControlled.propTypes = {
   id: PropTypes.string.isRequired,
-  value: PropTypes.oneOf(
+  value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.number,
-  ),
+  ]),
   options: PropTypes.arrayOf(
-    PropTypes.oneOf(
+    PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-    ),
+    ]),
   ).isRequired,
   onChange: PropTypes.func.isRequired,
 };

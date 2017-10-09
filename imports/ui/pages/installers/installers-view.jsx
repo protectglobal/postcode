@@ -16,6 +16,7 @@ import AuxFunctions from '../../../api/aux-functions';
 import DefaultLayout from '../../layouts/default/default-layout';
 // import SelectControlled from '../../components/forms/select-controlled';
 import AddInstallerModal from '../../components/installers/add-installer-modal';
+import FallbackInstallerAlert from '../../components/installers/fallback-installer-alert';
 import EditInstallerModal from '../../components/installers/edit-installer-modal';
 import style from './style.scss';
 
@@ -157,6 +158,7 @@ const InstallersView = (props) => {
 
   return (
     <DefaultLayout width="1500px" padding="20px 15px 0">
+      <FallbackInstallerAlert installers={installers} />
       <AddInstallerModal />
       <EditInstallerModal />
       <Table

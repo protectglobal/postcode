@@ -40,7 +40,6 @@ class EditInstallerModal extends Component {
     const fields = [
       'companyName',
       'logo',
-      // 'isFallbackInstaller',
       'addressOne',
       'addressTwo',
       'postalCode',
@@ -133,7 +132,6 @@ EditInstallerModal.propTypes = {
         secureUrl: PropTypes.string.isRequired,
       }),
     ]),
-    // isFallbackInstaller: PropTypes.bool.isRequired,
     addressOne: PropTypes.string.isRequired,
     addressTwo: PropTypes.string.isRequired,
     postalCode: PropTypes.string.isRequired,
@@ -144,7 +142,6 @@ EditInstallerModal.propTypes = {
     errors: PropTypes.shape({
       companyName: PropTypes.array.isRequired,
       logo: PropTypes.array.isRequired,
-      // isFallbackInstaller: PropTypes.array.isRequired,
       addressOne: PropTypes.array.isRequired,
       addressTwo: PropTypes.array.isRequired,
       postalCode: PropTypes.array.isRequired,
