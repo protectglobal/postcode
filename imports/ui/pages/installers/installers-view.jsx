@@ -9,6 +9,8 @@ import Button from 'antd/lib/button'; // for js
 import 'antd/lib/button/style/css'; // for css
 import Popconfirm from 'antd/lib/popconfirm'; // for js
 import 'antd/lib/popconfirm/style/css'; // for css
+import Switch from 'antd/lib/switch'; // for js
+import 'antd/lib/switch/style/css'; // for css
 // import Constants from '../../../api/constants';
 import AuxFunctions from '../../../api/aux-functions';
 import DefaultLayout from '../../layouts/default/default-layout';
@@ -23,6 +25,7 @@ import style from './style.scss';
 const InstallersView = (props) => {
   const {
     meteorData,
+    handleAsigneeInstallerChange,
     handleEditInstallerButtonClick,
     handleDeleteInstallerButtonClick,
   } = props;
@@ -43,11 +46,24 @@ const InstallersView = (props) => {
       title: 'Logo',
       dataIndex: 'logo',
       key: 'logo',
-      render: ({ url, secureUrl }) => (
+      render: (text, { logo: { url, secureUrl } }) => (
         <img
           src={secureUrl || url || '/camera-image.svg'}
           alt="company logo"
           className={style.logo}
+        />
+      ),
+    },
+    {
+      title: 'Is fallback installer',
+      dataIndex: 'isFallbackInstaller',
+      key: 'isFallbackInstaller',
+      render: (text, { _id, isFallbackInstaller }) => (
+        <Switch
+          checkedChildren="Yes"
+          unCheckedChildren="No"
+          checked={isFallbackInstaller}
+          onChange={value => handleAsigneeInstallerChange({ installerId: _id, value })}
         />
       ),
     },
@@ -175,6 +191,7 @@ InstallersView.propTypes = {
             secureUrl: PropTypes.string.isRequired,
           }),
         ]),
+        isFallbackInstaller: PropTypes.bool.isRequired,
         addressOne: PropTypes.string.isRequired,
         addressTwo: PropTypes.string.isRequired,
         postalCode: PropTypes.string.isRequired,
@@ -185,6 +202,7 @@ InstallersView.propTypes = {
       }).isRequired,
     ).isRequired,
   }).isRequired,
+  handleAsigneeInstallerChange: PropTypes.func.isRequired,
   handleEditInstallerButtonClick: PropTypes.func.isRequired,
   handleDeleteInstallerButtonClick: PropTypes.func.isRequired,
 };

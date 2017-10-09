@@ -57,6 +57,7 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
   check(installer, {
     companyName: String,
     logo: Object,
+    isFallbackInstaller: Boolean,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -70,6 +71,7 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
   const {
     companyName,
     logo,
+    isFallbackInstaller,
     addressOne,
     addressTwo,
     postalCode,
@@ -83,6 +85,7 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
   const errors = {
     companyName: [],
     logo: [],
+    isFallbackInstaller: [],
     addressOne: [],
     addressTwo: [],
     postalCode: [],
@@ -99,6 +102,10 @@ InstallersApiBoth.checkInstallerFields = (installer) => {
 
   if (!logo || !logo.publicId) {
     errors.logo.push('Logo is required');
+  }
+
+  if (!_.isBoolean(isFallbackInstaller)) {
+    errors.isFallbackInstaller.push('Field is required');
   }
 
   if (!addressOne || addressOne.trim().length === 0) {

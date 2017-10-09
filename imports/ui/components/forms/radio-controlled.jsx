@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import Select from 'antd/lib/select'; // for js
-import 'antd/lib/select/style/css'; // for css
+import Radio from 'antd/lib/radio'; // for js
+import 'antd/lib/radio/style/css'; // for css
 
-const Option = Select.Option;
+const RadioGroup = Radio.Group;
 
 //------------------------------------------------------------------------------
 // COMPONENT:
@@ -11,59 +11,58 @@ const Option = Select.Option;
 // end of the line on every change. This makes it impossible to edit text that
 // is not at the end of the input.
 // SOURCE: see jimbola https://github.com/reactjs/react-redux/issues/525
-class SelectControlled extends Component {
+class RadioControlled extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value) {
+  handleChange(evt) {
     // Get context
     const { id, onChange } = this.props;
     // Pass data up to parent component
-    onChange({ fieldName: id, value });
+    onChange({ fieldName: id, value: evt.target.value });
   }
 
   render() {
     const { id, value, options, onChange, ...other } = this.props;
 
-    const items = options && options.map(option => (
-      <Option key={option} value={option}>{option}</Option>
+    const items = options && options.map(({ value: val, label }) => (
+      <Radio key={label} value={val}>{label}</Radio>
     ));
 
     return (
       <div id={id}>
-        <Select
+        <RadioGroup
           value={value}
-          showSearch
           onChange={this.handleChange}
           {...other}
         >
           {items}
-        </Select>
+        </RadioGroup>
       </div>
     );
   }
 }
 
-SelectControlled.propTypes = {
+RadioControlled.propTypes = {
   id: PropTypes.string.isRequired,
   value: PropTypes.oneOf(
     PropTypes.string,
     PropTypes.number,
   ),
   options: PropTypes.arrayOf(
-    PropTypes.oneOf(
-      PropTypes.string,
-      PropTypes.number,
-    ),
+    PropTypes.shape({
+      value: PropTypes.any.isRequired,
+      label: PropTypes.string.isRequired,
+    }).isRequired,
   ).isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
-SelectControlled.defaultProps = {
+RadioControlled.defaultProps = {
   value: undefined,
 };
 
-export default SelectControlled;
+export default RadioControlled;

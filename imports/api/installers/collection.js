@@ -90,6 +90,11 @@ InstallersCollection.attachSchema(new SimpleSchema({
     type: String,
   },
 
+  isFallbackInstaller: {
+    type: Boolean,
+    optional: true,
+  },
+
   addressOne: {
     type: String,
   },

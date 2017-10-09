@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import Select from 'antd/lib/select'; // for js
-import 'antd/lib/select/style/css'; // for css
+import Switch from 'antd/lib/switch'; // for js
+import 'antd/lib/switch/style/css'; // for css
 
-const Option = Select.Option;
+const RadioGroup = Radio.Group;
 
 //------------------------------------------------------------------------------
 // COMPONENT:
@@ -11,59 +11,44 @@ const Option = Select.Option;
 // end of the line on every change. This makes it impossible to edit text that
 // is not at the end of the input.
 // SOURCE: see jimbola https://github.com/reactjs/react-redux/issues/525
-class SelectControlled extends Component {
+class SwitchControlled extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(value) {
+  handleChange(evt) {
+    console.log('evt', evt);
     // Get context
     const { id, onChange } = this.props;
     // Pass data up to parent component
-    onChange({ fieldName: id, value });
+    onChange({ fieldName: id, value: evt.target.value });
   }
 
   render() {
-    const { id, value, options, onChange, ...other } = this.props;
-
-    const items = options && options.map(option => (
-      <Option key={option} value={option}>{option}</Option>
-    ));
+    const { id, checked, onChange, ...other } = this.props;
 
     return (
       <div id={id}>
-        <Select
-          value={value}
-          showSearch
+        <Switch
+          checked={checked}
           onChange={this.handleChange}
           {...other}
-        >
-          {items}
-        </Select>
+        />
       </div>
     );
   }
 }
 
-SelectControlled.propTypes = {
+SwitchControlled.propTypes = {
   id: PropTypes.string.isRequired,
-  value: PropTypes.oneOf(
-    PropTypes.string,
-    PropTypes.number,
-  ),
-  options: PropTypes.arrayOf(
-    PropTypes.oneOf(
-      PropTypes.string,
-      PropTypes.number,
-    ),
-  ).isRequired,
+  checked: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
 };
 
-SelectControlled.defaultProps = {
-  value: undefined,
+SwitchControlled.defaultProps = {
+  checked: false,
 };
 
-export default SelectControlled;
+export default SwitchControlled;

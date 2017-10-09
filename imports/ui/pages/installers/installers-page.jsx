@@ -24,8 +24,23 @@ class InstallersPage extends Component {
   // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
   constructor(props) {
     super(props);
+    this.handleAsigneeInstallerChange = this.handleAsigneeInstallerChange.bind(this);
     this.handleEditInstallerButtonClick = this.handleEditInstallerButtonClick.bind(this);
     this.handleDeleteInstallerButtonClick = this.handleDeleteInstallerButtonClick.bind(this);
+  }
+
+  handleAsigneeInstallerChange({ installerId, value }) {
+    console.log(
+      'installerId', installerId,
+      'value', value,
+    );
+    Meteor.call('Installers.methods.setFallbackValue', installerId, value, (err) => {
+      if (err) {
+        Bert.alert('The form has errors', 'danger', 'growl-top-right');
+      } else {
+        Bert.alert('Operation succesful!', 'success', 'growl-top-right');
+      }
+    });
   }
 
   handleEditInstallerButtonClick({ _id: installerId }) {
@@ -80,6 +95,7 @@ class InstallersPage extends Component {
         reduxState={reduxState}
         meteorData={meteorData}
         // Pass methods down
+        handleAsigneeInstallerChange={this.handleAsigneeInstallerChange}
         handleEditInstallerButtonClick={this.handleEditInstallerButtonClick}
         handleDeleteInstallerButtonClick={this.handleDeleteInstallerButtonClick}
       />
@@ -197,6 +213,7 @@ const InstallersPageContainer = createContainer(() => {
       _id,
       companyName,
       logo,
+      isFallbackInstaller,
       addressOne,
       addressTwo,
       postalCode,
@@ -211,6 +228,7 @@ const InstallersPageContainer = createContainer(() => {
       key: _id, // required by antd table
       companyName: companyName || '',
       logo: logo || {},
+      isFallbackInstaller: isFallbackInstaller || false,
       addressOne: addressOne || '',
       addressTwo: addressTwo || '',
       postalCode: postalCode || '',

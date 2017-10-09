@@ -4,14 +4,8 @@ import { Cloudinary } from 'meteor/lepozepo:cloudinary';
 import { Bert } from 'meteor/themeteorchef:bert';
 import Form from 'antd/lib/form'; // for js
 import 'antd/lib/form/style/css'; // for css
-/* import Upload from 'antd/lib/upload'; // for js
-import 'antd/lib/upload/style/css'; // for css
-import Icon from 'antd/lib/icon'; // for js
-import 'antd/lib/icon/style/css'; // for css
-import Button from 'antd/lib/button'; // for js
-import 'antd/lib/button/style/css'; // for css */
 import InputControlled from '../../components/forms/input-controlled';
-// import TagsSelectControlled from '../../components/forms/tags-select-controlled';
+import RadioControlled from '../../components/forms/radio-controlled';
 import Actions from '../../../api/redux/client/actions';
 import AuxFunctions from '../../../api/aux-functions';
 import Installers from '../../../api/installers/namespace';
@@ -39,7 +33,15 @@ class ModalForm extends Component {
     const { reduxState, reduxActions } = this.props;
     const { errors } = reduxState;
 
-    reduxActions.dispatchUpdateTextField(fieldName, value);
+    if (fieldName !== 'isFallbackInstaller') {
+      reduxActions.dispatchUpdateTextField(fieldName, value);
+    } else {
+      console.log(
+        'fieldName', fieldName,
+        'value', value,
+      );
+      reduxActions.dispatchSetBooleanField(fieldName, value);
+    }
 
     // Clear errors if any
     if (errors[fieldName].length > 0) {
@@ -122,6 +124,7 @@ class ModalForm extends Component {
     const {
       companyName,
       logo,
+      isFallbackInstaller,
       addressOne,
       addressTwo,
       postalCode,
@@ -181,6 +184,21 @@ class ModalForm extends Component {
               />
             )}
           </div>
+        </FormItem>
+        <FormItem
+          label="Is fallback installer?"
+          validateStatus={(AuxFunctions.getFieldNameErrors(errors, 'isFallbackInstaller') && 'error') || ''}
+          help={AuxFunctions.getFieldNameErrors(errors, 'isFallbackInstaller')}
+        >
+          <RadioControlled
+            id="isFallbackInstaller"
+            value={isFallbackInstaller}
+            options={[
+              { value: false, label: 'No' },
+              { value: true, label: 'Yes' },
+            ]}
+            onChange={this.handleInputChange}
+          />
         </FormItem>
         <FormItem
           label="Address 1"
@@ -284,6 +302,7 @@ ModalForm.propTypes = {
     editInstallerModalVisible: PropTypes.bool.isRequired,
     companyName: PropTypes.string.isRequired,
     logo: PropTypes.object.isRequired,
+    isFallbackInstaller: PropTypes.bool.isRequired,
     addressOne: PropTypes.string.isRequired,
     addressTwo: PropTypes.string.isRequired,
     postalCode: PropTypes.string.isRequired,
@@ -294,6 +313,7 @@ ModalForm.propTypes = {
     errors: PropTypes.shape({
       companyName: PropTypes.array.isRequired,
       logo: PropTypes.array.isRequired,
+      isFallbackInstaller: PropTypes.array.isRequired,
       addressOne: PropTypes.array.isRequired,
       addressTwo: PropTypes.array.isRequired,
       postalCode: PropTypes.array.isRequired,

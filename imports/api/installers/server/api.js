@@ -164,6 +164,35 @@ InstallersApiServer.removeInstaller = (curUserId, installerId) => {
 };
 //------------------------------------------------------------------------------
 /**
+* @summary Set assignee installer value. This function must be called from a
+* trusted source (server) since we are not validating the user credentials.
+* @param {string} - curUserId. Current user id.
+* @param {string} - installerId. Id of the installer we want to change assignee
+* value.
+* @param {bool} - value. Assignee value (true or false).
+*/
+InstallersApiServer.setFallbackValue = (curUserId, installerId, value) => {
+  console.log('Installers.apiServer.setFallbackValue input:', curUserId, installerId, value);
+  check(curUserId, String);
+  check(installerId, String);
+  check(value, Boolean);
+
+  // Delete document
+  try {
+    InstallersCollection.update({ _id: installerId }, { $set: { isFallbackInstaller: value } });
+  } catch (exc) {
+    console.log(exc);
+    return {
+      err: {
+        reason: EJSON.stringify(exc, { indent: true }), // TODO: test this error
+      },
+    };
+  }
+
+  return { err: null };
+};
+//------------------------------------------------------------------------------
+/**
 * @summary Get assignee installer for the given postal code based on postal
 * areas. This function must be called from a trusted source (server) since we
 * are not validating the user credentials.
@@ -184,7 +213,7 @@ InstallersApiServer.getAssignee = (postalCode) => {
   // TODO: In case postal code doesn't match any postal areas, return default
   // installer
   if (!installer) {
-    installer = InstallersCollection.findOne({ isDefaultInstaller: true });
+    installer = InstallersCollection.findOne({ isFallbackInstaller: true });
 
     if (!installer) {
       return {
