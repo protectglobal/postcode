@@ -50,7 +50,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   const doc = Object.assign(
     {},
     newInstaller,
-    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas) },
+    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas).map(pa => pa.toUpperCase()) },
     { createdAt: new Date(), createdBy: curUserId },
   );
 
@@ -114,7 +114,7 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   const doc = Object.assign(
     {},
     installer,
-    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas) },
+    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas).map(pa => pa.toUpperCase()) },
     { updatedAt: new Date(), updatedBy: curUserId },
   );
 
@@ -200,29 +200,46 @@ InstallersApiServer.setFallbackValue = (curUserId, installerId, value) => {
 * @return {object} - installer. Installer serving the given postal code.
 */
 InstallersApiServer.getAssignee = (postalCode) => {
-  // console.log('Installers.apiServer.getAssignee input:', postalCode);
+  console.log('\nInstallers.apiServer.getAssignee:', postalCode);
   check(postalCode, String);
 
-  // TODO: Get installer serving postal code
-  // (for now, just return a random document)
-  const pipeline = [
-    { $sample: { size: 1 } },
-  ];
-  let installer = InstallersCollection.aggregate(pipeline)[0];
+  // Process postal code to remove all spaces.
+  const cleanPC = postalCode.trim().replace(' ', '').toUpperCase();
+  console.log('cleanPC', cleanPC);
 
-  // TODO: In case postal code doesn't match any postal areas, return default
-  // installer
-  if (!installer) {
-    installer = InstallersCollection.findOne({ isFallbackInstaller: true });
+  const MAX_CHARS = 6;
+  let stopCond = false;
 
-    if (!installer) {
-      return {
-        err: {
-          reason: 'Default installer is not set!',
-        },
-        installer: null,
+  // Look for installers matching the first MAX_CHARS or less chars of the
+  // given postal code
+  for (let numChars = MAX_CHARS; numChars > 0 && !stopCond; numChars -= 1) {
+    if (cleanPC.length >= numChars) {
+      const selector = {
+        // Match the first numChars (exact match)
+        postalAreas: cleanPC.slice(0, numChars),
       };
+      const installer = InstallersCollection.findOne(selector);
+      console.log('installer: ', installer);
+      if (installer) {
+        stopCond = true;
+        return {
+          err: null,
+          installer,
+        };
+      }
     }
+  }
+
+  // In case no installer was found, return fallback.
+  const installer = InstallersCollection.findOne({ isFallbackInstaller: true });
+
+  if (!installer) {
+    return {
+      err: {
+        reason: 'Default installer is not set!',
+      },
+      installer: null,
+    };
   }
 
   return {
@@ -261,12 +278,12 @@ InstallersApiServer.sendEmail = (installerId, customer) => {
 
   // In case we are in testMode, deliver emails to the given testEmail address
   const { isTest, testEmail, exceptions } = Meteor.settings.testMode;
-  console.log(
+  /* console.log(
     'isTest', isTest,
     'testEmail', testEmail,
     'exceptions', exceptions,
     'exceptions.indexOf(installer.email)', exceptions.indexOf(installer.email),
-  );
+  ); */
 
   // Resolve delivery email
   const emailTo = (!isTest || exceptions.indexOf(installer.email) !== -1)

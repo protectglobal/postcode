@@ -15,7 +15,6 @@ Meteor.methods({ 'Installers.methods.addInstaller'(newInstaller) {
   check(newInstaller, {
     companyName: String,
     logo: Object,
-    // isFallbackInstaller: Boolean,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
@@ -59,7 +58,6 @@ Meteor.methods({ 'Installers.methods.editInstaller'(installerId, installer) {
   check(installer, {
     companyName: String,
     logo: Object,
-    // isFallbackInstaller: Boolean,
     addressOne: String,
     addressTwo: Match.Maybe(String),
     postalCode: String,
