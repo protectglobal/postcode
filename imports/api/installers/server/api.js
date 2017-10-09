@@ -297,7 +297,8 @@ InstallersApiServer.sendEmail = (installerId, customer) => {
       from: `no-reply@${Constants.DOMAIN_NAME}`,
       subject: 'Customer\'s installation request',
       text: `
-        Customer's data:\n
+        A user has requested more info and/or a demo of a PROTECT fog cannon.\n
+        Please contact the below-mentioned person.\n\n
         Name: ${customer.name};\n
         Postal code: ${customer.postalCode};\n,
         Phone number: ${customer.phoneNumber};\n,
