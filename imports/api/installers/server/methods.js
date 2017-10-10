@@ -164,18 +164,22 @@ Meteor.methods({ 'Installers.methods.setFallbackValue'(installerId, value) {
       throw new Error(500, err1.reason);
     }
 
-    // Secondly, set the rest of the installer to NOT be the fallback.
-    const errors = [];
-    InstallersCollection.find({ _id: { $ne: installerId }, isFallbackInstaller: true }).forEach(({ _id }) => {
-      const { err } = InstallersApiServer.setFallbackValue(curUserId, _id, false);
-      if (err) {
-        errors.push(err);
+    // Don't wait for the following task to be done before giving the client
+    // the green light to move ahead
+    Meteor.defer(() => {
+      // Secondly, set the rest of the installer to NOT be the fallback.
+      const errors = [];
+      InstallersCollection.find({ _id: { $ne: installerId }, isFallbackInstaller: true }).forEach(({ _id }) => {
+        const { err } = InstallersApiServer.setFallbackValue(curUserId, _id, false);
+        if (err) {
+          errors.push(err);
+        }
+      });
+      if (errors.length > 0) {
+        // Bubble up first error to client
+        throw new Error(500, errors[0].reason);
       }
     });
-    if (errors.length > 0) {
-      // Bubble up first error to client
-      throw new Error(500, errors[0].reason);
-    }
   }
 } });
 //------------------------------------------------------------------------------

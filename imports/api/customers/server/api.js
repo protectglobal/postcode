@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { check, Match } from 'meteor/check';
 import AuxFunctions from '../../aux-functions.js';
@@ -39,9 +40,12 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
   const doc = Object.assign({}, newCustomer, { createdAt: new Date() });
 
   // Insert document
-  let customerId = '';
   try {
-    customerId = CustomersCollection.insert(doc);
+    const customerId = CustomersCollection.insert(doc);
+    return {
+      err: null,
+      customer: CustomersCollection.findOne({ _id: customerId }),
+    };
   } catch (exc) {
     console.log(exc);
     return {
@@ -51,12 +55,6 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
       customer: null,
     };
   }
-
-  // Return the new doc
-  return {
-    err: null,
-    customer: CustomersCollection.findOne({ _id: customerId }),
-  };
 };
 //------------------------------------------------------------------------------
 /**
@@ -64,42 +62,13 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
 * called from a trusted source (server) since we are not validating the user
 * credentials.
 * @param {string} - customerId.
-* @return {object} - installer.
+* @return {string} - installerId.
 */
-CustomersApiServer.setAssignedInstaller = (customerId, installer) => {
-  console.log('\nCustomers.apiServer.setAssignedInstaller:', customerId, installer);
-  check(customerId, String);
-  check(installer, {
-    _id: String,
-    createdAt: Date,
-    createdBy: String,
-    companyName: String,
-    logo: Object,
-    isFallbackInstaller: Match.Maybe(Boolean),
-    addressOne: String,
-    addressTwo: Match.Maybe(String),
-    postalCode: String,
-    city: String,
-    phoneNumber: String,
-    email: String,
-    postalAreas: [String],
-    updatedAt: Match.Maybe(Date),
-    updatedBy: Match.Maybe(String),
-  });
+CustomersApiServer.setAssignedInstaller = (customerId, installerId) => {
+  console.log('\nCustomers.apiServer.setAssignedInstaller:', customerId, installerId);
+  check([customerId, installerId], [String]);
 
-  // Destructure
-  const { _id, companyName } = installer;
-
-  // Update document
-  const modifier = {
-    $set: {
-      installer: {
-        id: _id,
-        companyName,
-      },
-    },
-  };
-  CustomersCollection.update({ _id: customerId }, modifier);
+  CustomersCollection.update({ _id: customerId }, { $set: { installerId } });
 };
 //------------------------------------------------------------------------------
 /**
@@ -118,6 +87,36 @@ CustomersApiServer.setEmailDeliveryStatus = (customerId, deliveryStatus) => {
   const modifier = { $set: { emailDeliveryStatus: deliveryStatus } };
   CustomersCollection.update({ _id: customerId }, modifier);
 };
+//------------------------------------------------------------------------------
+/**
+* @summary Remove test coduments from DB. This function must be called from a
+* trusted source (server) since we are not validating the user credentials.
+*/
+/* CustomersApiServer.clearTestDocs = () => {
+  // console.log('Customers.apiServer.clearTestDocs');
+  const { testCode } = Meteor.settings;
+
+
+  if (!testCode || testCode.trim().length === 0) {
+    return { err: 'test code is required' };
+  }
+
+  try {
+    const selector = {
+      $or: [
+        { name: new RegExp(testCode, 'i') },
+        { postalCode: new RegExp(testCode, 'i') },
+      ],
+    };
+    CustomersCollection.remove(selector);
+    return { err: null };
+  } catch (exc) {
+    console.log(exc);
+    return {
+      err: 'Something went wrong at clearTestBloggerDocs',
+    };
+  }
+}; */
 //------------------------------------------------------------------------------
 
 export default CustomersApiServer;

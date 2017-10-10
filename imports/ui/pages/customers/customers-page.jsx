@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 // import { connect } from 'react-redux';
 import { Meteor } from 'meteor/meteor';
 // import { Accounts } from 'meteor/accounts-base';
 import { createContainer } from 'meteor/react-meteor-data';
-import { Bert } from 'meteor/themeteorchef:bert';
+// import { Bert } from 'meteor/themeteorchef:bert';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Roles } from 'meteor/alanning:roles';
 import moment from 'moment';
@@ -12,7 +12,8 @@ import moment from 'moment';
 import Constants from '../../../api/constants.js';
 // import AuxFunctions from '../../../api/aux-functions.js';
 import Users from '../../../api/users/namespace.js';
-import Customers from '../../../api/customers/namespace.js';
+// import Customers from '../../../api/customers/namespace.js';
+import { CustomersWithInstallers } from '../../../api/aggregate-collections.js';
 import CustomersView from './customers-view.jsx';
 
 //------------------------------------------------------------------------------
@@ -22,27 +23,13 @@ import CustomersView from './customers-view.jsx';
 * @summary Contains all the 'Page' logic and takes care of view dispatching.
 * Actions should be dispatched here and NOT in any child component!
 */
-class CustomersPage extends Component {
-  // See ES6 Classes section at: https://facebook.github.io/react/docs/reusable-components.html
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { meteorData } = this.props;
-
-    return (
-      <CustomersView
-        // Pass data down
-        // reduxState={reduxState}
-        meteorData={meteorData}
-        // Pass methods down
-        // handleRoleChange={this.handleRoleChange}
-        // handleDeactivate={this.handleDeactivate}
-      />
-    );
-  }
-}
+const CustomersPage = ({ meteorData }) => (
+  <CustomersView
+    // Pass data down
+    meteorData={meteorData}
+    // Pass methods down
+  />
+);
 
 CustomersPage.propTypes = {
   meteorData: PropTypes.shape({
@@ -91,10 +78,10 @@ const CustomersPageContainer = createContainer(() => {
   }
 
   // Subscribe to all customers data
-  const subs = Meteor.subscribe('Customers.publications.getAllCustomers');
+  const subs = Meteor.subscribe('Customers.publications.getCustomersWithInstallers');
 
   // Format data to be displayed in table.
-  const customers = Customers.collection.find({}, { sort: { createdAt: -1 } }).map((customer) => {
+  const customers = CustomersWithInstallers.collection.find({}, { sort: { createdAt: -1 } }).map((customer) => {
     // Destructure
     const {
       _id,
@@ -128,5 +115,6 @@ const CustomersPageContainer = createContainer(() => {
     },
   };
 }, CustomersPage);
+//------------------------------------------------------------------------------
 
 export default CustomersPageContainer;

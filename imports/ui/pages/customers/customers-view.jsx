@@ -1,14 +1,7 @@
 import React, { PropTypes } from 'react';
-// import { EJSON } from 'meteor/ejson';
 import Table from 'antd/lib/table'; // for js
 import 'antd/lib/table/style/css'; // for css
-import Button from 'antd/lib/button'; // for js
-import 'antd/lib/button/style/css'; // for css
-import Popconfirm from 'antd/lib/popconfirm'; // for js
-import 'antd/lib/popconfirm/style/css'; // for css
 import DefaultLayout from '../../layouts/default/default-layout';
-import SelectControlled from '../../components/forms/select-controlled';
-import Constants from '../../../api/constants';
 
 //------------------------------------------------------------------------------
 // COMPONENT:
@@ -50,14 +43,14 @@ const CustomersView = (props) => {
       key: 'createdAt',
     },
     {
-      title: 'Assigned installer',
+      title: 'Assignee installer',
       dataIndex: 'installer',
       key: 'installer',
-      render: ({ id, companyName }) => {
-        if (id && companyName) {
+      render: (text, { installer: { _id, companyName } }) => {
+        if (_id && companyName) {
           return (
             <p>
-              id: {id}
+              Company id: {_id}
               <br />
               Company name: {companyName}
             </p>
@@ -101,8 +94,8 @@ CustomersView.propTypes = {
         installer: PropTypes.oneOfType([
           PropTypes.shape({}),
           PropTypes.shape({
-            id: PropTypes.string.isRequired,
-            name: PropTypes.string.isRequired,
+            _id: PropTypes.string.isRequired,
+            companyName: PropTypes.string.isRequired,
           }),
         ]),
         emailDeliveryStatus: PropTypes.oneOf(['', 'failed', 'sent']),

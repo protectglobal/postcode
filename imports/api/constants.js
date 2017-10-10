@@ -3,7 +3,7 @@
 */
 
 const Constants = {
-  SITE_BRAND: 'Protect',
+  SITE_BRAND: 'PROTECT',
   DOMAIN_NAME: 'protectglobal.dk',
   ALL_ROLES: ['normal', 'admin'],
   HOME_PAGE_ROLES: ['normal', 'admin'],

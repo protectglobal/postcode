@@ -50,7 +50,7 @@ InstallersApiServer.insertInstaller = (curUserId, newInstaller) => {
   const doc = Object.assign(
     {},
     newInstaller,
-    { postalAreas: AuxFunctions.parsePostalAreas(newInstaller.postalAreas).map(pa => pa.toUpperCase()) },
+    { postalAreas: AuxFunctions.formatPostalAreas(newInstaller.postalAreas) },
     { createdAt: new Date(), createdBy: curUserId },
   );
 
@@ -114,7 +114,7 @@ InstallersApiServer.editInstaller = (curUserId, installerId, installer) => {
   const doc = Object.assign(
     {},
     installer,
-    { postalAreas: AuxFunctions.parsePostalAreas(installer.postalAreas).map(pa => pa.toUpperCase()) },
+    { postalAreas: AuxFunctions.formatPostalAreas(installer.postalAreas) },
     { updatedAt: new Date(), updatedBy: curUserId },
   );
 
