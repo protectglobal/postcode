@@ -62,18 +62,9 @@ CustomersCollection.attachSchema(new SimpleSchema({
     regEx: SimpleSchema.RegEx.Email,
   },
 
-  installer: {
-    type: Object,
-    label: 'Installer assigned to this customer',
+  installerId: {
+    type: String,
     optional: true,
-  },
-
-  'installer.id': {
-    type: String,
-  },
-
-  'installer.companyName': {
-    type: String,
   },
 
   emailDeliveryStatus: {
