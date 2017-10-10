@@ -92,7 +92,7 @@ CustomersApiServer.setEmailDeliveryStatus = (customerId, deliveryStatus) => {
 * @summary Remove test coduments from DB. This function must be called from a
 * trusted source (server) since we are not validating the user credentials.
 */
-CustomersApiServer.clearTestDocs = () => {
+/* CustomersApiServer.clearTestDocs = () => {
   // console.log('Customers.apiServer.clearTestDocs');
   const { testCode } = Meteor.settings;
 
@@ -116,7 +116,7 @@ CustomersApiServer.clearTestDocs = () => {
       err: 'Something went wrong at clearTestBloggerDocs',
     };
   }
-};
+}; */
 //------------------------------------------------------------------------------
 
 export default CustomersApiServer;

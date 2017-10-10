@@ -255,7 +255,7 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
 *   message: err.reason,
 * },
 */
-ApiV1.addRoute('clear-test-db', { authRequired: true }, {
+/* ApiV1.addRoute('clear-test-db', { authRequired: true }, {
   post: {
     roleRequired: ['admin'],
     action() {
@@ -286,5 +286,5 @@ ApiV1.addRoute('clear-test-db', { authRequired: true }, {
       };
     },
   },
-});
+}); */
 //------------------------------------------------------------------------------
