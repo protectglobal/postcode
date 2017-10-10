@@ -22,6 +22,18 @@ AuxFunctions.parsePostalAreas = (postalAreas) => {
 };
 //------------------------------------------------------------------------------
 /**
+* @summary Format postalAreas so that they have the right format (uppercase,
+* uniqueness).
+* @param {string} postalAreas - String of postal areas separated by comma, space
+* or semicolon.
+*/
+AuxFunctions.formatPostalAreas = (postalAreas) => {
+  check(postalAreas, String);
+
+  return _.unique(AuxFunctions.parsePostalAreas(postalAreas).map(pa => pa.toUpperCase()));
+};
+//------------------------------------------------------------------------------
+/**
 * @summary Format cloudinary raw data.
 * @param {object} - data. Data retrieved by Cloudinary.
 */
