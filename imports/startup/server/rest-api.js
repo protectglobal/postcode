@@ -210,13 +210,16 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         'email',
       ];
 
+      // Add logo to response
+      const response = Object.assign({}, _.pick(installer, fields), { logo: installer.logo.secureUrl });
+
       // Handle success
       return {
         statusCode: 200,
         body: {
           status: 'success',
-          message: `Assignee installer: ${EJSON.stringify(_.pick(installer, fields), { indent: true })}`,
-          // message: EJSON.stringify(_.pick(installer, fields), { indent: true }),
+          // message: `Assignee installer: ${EJSON.stringify(_.pick(installer, fields), { indent: true })}`,
+          message: EJSON.stringify(response, { indent: true }),
         },
       };
     },
