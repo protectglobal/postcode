@@ -32,12 +32,8 @@
     "apiKey": "488285919113964",
     "apiSecret": "ftqQ5Ed7yUh978sCLL5Y5P-bmko"
   },
-  "testMode": {
-    "isTest": true,
-    "testEmail": "federodes@gmail.com",
-    "exceptions": [
-      "protect@parogroup.co.uk"
-    ]
-  },
-  "testCode": "thisIsATest-nfw8ryw4r984rnfry4qS"
+  "sendEmailCopyTo": [
+    "federodes@gmail.com",
+    "sales@protectglobal.co.uk"
+  ]
 }
