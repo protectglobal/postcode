@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Restivus } from 'meteor/nimble:restivus';
 import { EJSON } from 'meteor/ejson';
 import _ from 'underscore';
+import EmailSystem from '../../api/email-system/namespace.js';
 import Customers from '../../api/customers/namespace.js';
 import Installers from '../../api/installers/namespace.js';
 
@@ -193,10 +194,18 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         Customers.apiServer.setAssignedInstaller(customerId, installerId);
 
         // Send email containing customer data to installer
-        const { deliveryStatus } = Installers.apiServer.sendEmail(installerId, Object.assign({}, customer));
+        const { email: installerEmail } = installer;
+        const { deliveryStatus } = EmailSystem.apiServer.sendCustomerData(installerEmail, Object.assign({}, customer));
 
         // Save email delivery status into customer record
         Customers.apiServer.setEmailDeliveryStatus(customerId, deliveryStatus);
+
+        // Finally, send email copies
+        const { sendEmailCopyTo } = Meteor.settings;
+        _.each(sendEmailCopyTo, (to) => {
+          console.log('sendEmailCopyTo', to);
+          EmailSystem.apiServer.sendCustomerData(to, Object.assign({}, customer));
+        });
       });
 
       // List of fields to return
