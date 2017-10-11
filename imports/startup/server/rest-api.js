@@ -200,12 +200,16 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         // Save email delivery status into customer record
         Customers.apiServer.setEmailDeliveryStatus(customerId, deliveryStatus);
 
-        // Finally, send email copies
+        // Send email copies
         const { sendEmailCopyTo } = Meteor.settings;
         _.each(_.without(sendEmailCopyTo, installerEmail), (to) => {
           console.log('sendEmailCopyTo', to);
           EmailSystem.apiServer.sendCustomerData(to, Object.assign({}, customer));
         });
+
+        // Finally, send email to customer containing installer's data
+        const { email: customerEmail } = customer;
+        EmailSystem.apiServer.sendInstallerData(customerEmail, Object.assign({}, installer));
       });
 
       // List of fields to return
