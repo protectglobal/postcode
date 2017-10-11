@@ -47,19 +47,23 @@ CustomersCollection.attachSchema(new SimpleSchema({
   name: {
     type: String,
     label: 'Customer\'s name',
+    max: 100,
   },
 
   postalCode: {
     type: String,
+    max: 100,
   },
 
   phoneNumber: {
     type: String,
+    max: 100,
   },
 
   email: {
     type: String,
     regEx: SimpleSchema.RegEx.Email,
+    max: 100,
   },
 
   installerId: {
