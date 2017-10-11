@@ -202,7 +202,7 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
 
         // Finally, send email copies
         const { sendEmailCopyTo } = Meteor.settings;
-        _.each(sendEmailCopyTo, (to) => {
+        _.each(_.without(sendEmailCopyTo, installerEmail), (to) => {
           console.log('sendEmailCopyTo', to);
           EmailSystem.apiServer.sendCustomerData(to, Object.assign({}, customer));
         });
