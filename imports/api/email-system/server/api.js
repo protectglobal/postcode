@@ -36,11 +36,11 @@ EmailSystemApiServer.sendCustomerData = (to, customer) => {
       subject: 'Customer\'s installation request',
       text: `
         A user has requested more info and/or a demo of a PROTECT fog cannon.\n
-        Please contact the below-mentioned person.\n\n
-        Name: ${customer.name};\n
-        Postal code: ${customer.postalCode};\n
-        Phone number: ${customer.phoneNumber};\n
-        Email: ${customer.email};\n
+        Please contact the below-mentioned person:\n
+        Name: ${customer.name}\n
+        Postal code: ${customer.postalCode}\n
+        Phone number: ${customer.phoneNumber}\n
+        Email: ${customer.email}\n
       `,
     });
   } catch (exc) {
@@ -88,16 +88,13 @@ EmailSystemApiServer.sendInstallerData = (to, installer) => {
     Email.send({
       to,
       from: `no-reply@${Constants.DOMAIN_NAME}`,
-      subject: 'Installer\'s data',
+      subject: 'Thank you for your enquiry',
       text: `
-        A user has requested more info and/or a demo of a PROTECT fog cannon.\n
-        Please contact the below-mentioned person.\n\n
-        Company name: ${installer.companyName};\n
-        Address: ${installer.addressOne};\n
-        Post code: ${installer.postalCode};\n
-        City: ${installer.city};\n
-        Phone number: ${installer.phoneNumber};\n
-        Email: ${installer.email};\n
+        Thank you for your enquiry.\n
+        Your local installer will be in touch shortly:\n
+        ${installer.companyName}\n
+        Email: ${installer.email}\n
+        Call: ${installer.phoneNumber}\n
       `,
     });
   } catch (exc) {
