@@ -134,6 +134,7 @@ const InstallersView = (props) => {
               // is pre-filled using the record data
               handleEditInstallerButtonClick(record);
             }}
+            className="mr1"
           >
             Edit
           </Button>
@@ -146,7 +147,6 @@ const InstallersView = (props) => {
           >
             <Button
               type="danger"
-              className="ml1"
             >
               Delete
             </Button>
