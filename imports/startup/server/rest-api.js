@@ -150,10 +150,10 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
 
       // Ensure string
       const newCustomer = {
-        name: (name && String(name)) || '',
-        postalCode: (postalCode && String(postalCode)) || '',
-        phoneNumber: (phoneNumber && String(phoneNumber)) || '',
-        email: (email && String(email)) || '',
+        name: (name && String(name).trim()) || '',
+        postalCode: (postalCode && String(postalCode).trim()) || '',
+        phoneNumber: (phoneNumber && String(phoneNumber).trim()) || '',
+        email: (email && String(email).trim()) || '',
       };
 
       // Insert customer
