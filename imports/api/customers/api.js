@@ -45,7 +45,7 @@ CustomersApiBoth.checkNewCustomerFields = (newCustomer) => {
 
   if (!email || email.trim().length === 0) {
     errors.email.push('Email is required');
-  } else if (!AuxFunctions.validateEmail(email)) {
+  } else if (!AuxFunctions.validateEmail(email.trim())) {
     errors.email.push('Email is invalid');
   }
 
