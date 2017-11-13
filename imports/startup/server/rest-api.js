@@ -146,7 +146,7 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
       console.log('API insert-customer this.bodyParams', this.bodyParams);
 
       // Destructure
-      const { name, postalCode, phoneNumber, email } = this.bodyParams;
+      const { name, postalCode, phoneNumber, email, ipAddress } = this.bodyParams;
 
       // Ensure string
       const newCustomer = {
@@ -154,6 +154,7 @@ ApiV1.addRoute('insert-customer', { authRequired: true }, {
         postalCode: (postalCode && String(postalCode).trim()) || '',
         phoneNumber: (phoneNumber && String(phoneNumber).trim()) || '',
         email: (email && String(email).trim()) || '',
+        ipAddress: (ipAddress && String(ipAddress).trim()) || '',
       };
 
       // Insert customer

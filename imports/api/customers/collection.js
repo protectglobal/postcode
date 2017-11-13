@@ -66,6 +66,13 @@ CustomersCollection.attachSchema(new SimpleSchema({
     max: 100,
   },
 
+  ipAddress: {
+    type: String,
+    regEx: SimpleSchema.RegEx.IP,
+    max: 100,
+    optional: true,
+  },
+
   installerId: {
     type: String,
     optional: true,

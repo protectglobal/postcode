@@ -26,6 +26,7 @@ EmailSystemApiServer.sendCustomerData = (to, customer) => {
     postalCode: String,
     phoneNumber: String,
     email: String,
+    ipAddress: Match.Maybe(String),
   });
 
   // Send email

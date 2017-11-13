@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor';
 import { EJSON } from 'meteor/ejson';
 import { check, Match } from 'meteor/check';
 import AuxFunctions from '../../aux-functions.js';
@@ -23,6 +22,7 @@ CustomersApiServer.insertCustomer = (newCustomer) => {
     postalCode: String,
     phoneNumber: String,
     email: String,
+    ipAddress: Match.Maybe(String),
   });
 
   // Check for errors

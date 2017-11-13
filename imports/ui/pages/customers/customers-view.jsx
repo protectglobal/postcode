@@ -38,6 +38,11 @@ const CustomersView = (props) => {
       key: 'email',
     },
     {
+      title: 'IP Address',
+      dataIndex: 'ipAddress',
+      key: 'ipAddress',
+    },
+    {
       title: 'Created at',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -91,6 +96,7 @@ CustomersView.propTypes = {
         postalCode: PropTypes.string.isRequired,
         phoneNumber: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
+        ipAddress: PropTypes.string.isRequired,
         installer: PropTypes.oneOfType([
           PropTypes.shape({}),
           PropTypes.shape({
