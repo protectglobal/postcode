@@ -1,5 +1,7 @@
 import { check, Match } from 'meteor/check';
 import _ from 'underscore';
+
+const validateIP = require('validate-ip-node');
 // const parseDomain = require('parse-domain');
 
 /**
@@ -154,6 +156,10 @@ AuxFunctions.validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i;
   return re.test(email);
 };
+//------------------------------------------------------------------------------
+AuxFunctions.validateIP = ip => (
+  validateIP(ip)
+);
 //------------------------------------------------------------------------------
 AuxFunctions.validateUrl = (url) => {
   const re = /^(http(s)?:\/\/)?(www\.)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i;

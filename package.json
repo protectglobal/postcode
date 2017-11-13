@@ -29,7 +29,8 @@
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.2.0",
     "request": "^2.81.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "validate-ip-node": "^1.0.6"
   },
   "eslintConfig": {
     "plugins": [

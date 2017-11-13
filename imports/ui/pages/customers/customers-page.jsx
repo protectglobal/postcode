@@ -1,18 +1,11 @@
 import React, { PropTypes } from 'react';
-// import { connect } from 'react-redux';
 import { Meteor } from 'meteor/meteor';
-// import { Accounts } from 'meteor/accounts-base';
 import { createContainer } from 'meteor/react-meteor-data';
-// import { Bert } from 'meteor/themeteorchef:bert';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Roles } from 'meteor/alanning:roles';
 import moment from 'moment';
-// import _ from 'underscore';
-// import Actions from '../../../api/redux/client/actions.js';
 import Constants from '../../../api/constants.js';
-// import AuxFunctions from '../../../api/aux-functions.js';
 import Users from '../../../api/users/namespace.js';
-// import Customers from '../../../api/customers/namespace.js';
 import { CustomersWithInstallers } from '../../../api/aggregate-collections.js';
 import CustomersView from './customers-view.jsx';
 
@@ -90,6 +83,7 @@ const CustomersPageContainer = createContainer(() => {
       postalCode,
       phoneNumber,
       email,
+      ipAddress,
       installer,
       emailDeliveryStatus,
     } = customer;
@@ -102,6 +96,7 @@ const CustomersPageContainer = createContainer(() => {
       postalCode: postalCode || '',
       phoneNumber: phoneNumber || '',
       email: email || '',
+      ipAddress: ipAddress || '',
       installer: installer || {},
       emailDeliveryStatus: emailDeliveryStatus || '',
     };
